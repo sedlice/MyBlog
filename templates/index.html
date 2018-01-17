@@ -3,41 +3,74 @@
 <head>
     <meta charset="utf-8"/>
     <title>Flask框架实例</title>
-    <link rel="stylesheet" type="text/css" href="static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css"/>
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
+    <style>
+        .layui-header{
+            background-color: #393D49;
+        }
+        .layui-nav{
+            float: right;
+            width: 900px;
+        }
+        .layui-main{
+            overflow: hidden;
+        }
+        .blog-name span{
+            font-size: 48px;
+            color: #F0F0F0;
+            font-weight: lighter;
+        }
+    </style>
 </head>
 <body>
-    <div class="header">
-        {%if islogin == '1' %}
-            <h1>欢迎 ,{{username}}!</h1>
-            <h2><a href="/logout">退出登录</a> </h2>
-        {%else%}
-            <h1>{{username}}!</h1>
-            <h2><a href="/login">登录页面</a> </h2>
-        {%endif%}
-        <div class="nav">
-            <ul>
-                {%for nav in nav_list%}
-                <li><a href="{{nav}}">{{nav}}</a></li>
-                {%endfor%}
+    <div class="layui-header">
+        <div class="layui-main">
+            <a class="blog-name" href="/">
+                <span>My Blog</span>
+            </a>
+            <ul class="layui-nav" style="text-align: right;">
+            {%for nav in nav_list%}
+                <li class="layui-nav-item">
+{#                    <a href="{{nav}}">{{nav}}</a>#}
+                    <a href="">{{nav}}</a>
+                </li>
+            {%endfor%}
             </ul>
+            {%if islogin == '1' %}
+                <span class="layui-badge-rim">欢迎 ,{{username}}!</span>
+                <a href="/logout">退出登录</a>
+            {%else%}
+                <a href="/login">
+                    <span class="layui-badge-rim">{{username}}!</span>
+                </a>
+            {%endif%}
         </div>
     </div>
-    <div class="container">
-        <div class="item">
-            <h1>{{blog['title']}}</h1>
-            <div class="content">
-                <img src="/static/images/cat.jpg" alt="cat" />
-                <p>{{blog['content']}}</p>
-                <img src="{{img}}" alt="cat" />
+
+
+        <div class="layui-container">
+            <div class="item">
+                <h1>{{blog['title']}}</h1>
+                <div class="content">
+                    <img src="/static/images/cat.jpg" alt="cat" />
+                    <p>{{blog['content']}}</p>
+                    <img src="{{img}}" alt="cat" />
+                </div>
+            </div>
+            <div class="side">
+                <ul>
+                    {%for key,value in blogtag.items()%}
+                        <li>{{key}}({{value}})</li>
+                    {%endfor%}
+                </ul>
             </div>
         </div>
-        <div class="side">
-            <ul>
-                {%for key,value in blogtag.items()%}
-                    <li>{{key}}({{value}})</li>
-                {%endfor%}
-            </ul>
-        </div>
-    </div>
 </body>
+<script type="text/javascript">
+    layui.use(['form', 'element'], function(){
+        var element = layui.element;
+
+    })
+</script>
 </html>

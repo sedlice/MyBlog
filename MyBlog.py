@@ -11,9 +11,12 @@ image_path = os.path.join(os.getcwd(), "static/images")
 
 @app.route('/')
 def index():
-    username = request.cookies.get("username")
-    if not username:
-        return redirect("/login")
+    cookies_username = request.cookies.get("username")
+    if not cookies_username:
+        # return redirect("/login")
+        username = "请登录"
+    else:
+        username = cookies_username
     islogin = session.get("is_login")
     nav_list = [u"首页", u"经济", u"文化", u"科技", u"娱乐"]
     blog = {"title": "欢迎来到我的博客", "content": "Hello"}

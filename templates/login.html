@@ -3,11 +3,16 @@
 <head>
     <meta charset="utf-8"/>
     <title>登录</title>
-    <link rel="stylesheet" type="text/css" href="static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css"/>
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>登录页</h1>
+    <div class="layui-header">
+        <div class="layui-main">
+            <a class="logo" href="login.html">
+                <h1>My Blog</h1>
+            </a>
+        </div>
     </div>
     <div class="container">
         <div class="item">
@@ -22,4 +27,9 @@
         </div>
     </div>
 </body>
+<script type="text/javascript">
+    layui.use(['form'], function () {
+
+    })
+</script>
 </html>
