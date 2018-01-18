@@ -6,6 +6,9 @@
     <link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css"/>
     <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style>
+        body{
+            background: url("../static/images/bgimg.jpg") no-repeat center fixed;
+        }
         .layui-header{
             width: 100%;
             top: 0px;
@@ -64,6 +67,18 @@
         }
         .aside-div{
             margin-bottom: 50px;
+            background: rgba(255,255,255,0.5);
+            padding: 5px;
+            color: #000000;
+        }
+        .aside-div a{
+            color: #000000;
+        }
+        .article-img img{
+            width: 400px;
+        }
+        .article-title a{
+            color: #5FB878;
         }
     </style>
 </head>
@@ -132,15 +147,18 @@
                       </li>
                       <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-content layui-text article-panel" style="height: 300px">
-                          <h3 class="layui-timeline-title">8月15日</h3>
-                          <p>
-                            中国人民抗日战争胜利72周年
-                            <br>常常在想，尽管对这个国家有这样那样的抱怨，但我们的确生在了最好的时代
-                            <br>铭记、感恩
-                            <br>所有为中华民族浴血奋战的英雄将士
-                            <br>永垂不朽
-                          </p>
+                        <div class="layui-timeline-content layui-text article-panel">
+                          <h2 class="layui-timeline-title">8月15日</h2>
+                            <div class="article-title">
+                                <h1><a href="">{{blog['title']}}</a></h1>
+                            </div>
+                            <hr>
+                            <div class="article-img">
+                                <img src="{{img}}" alt="cat" />
+                            </div>
+                            <div class="article-content">
+                                <p>{{blog['content']}}</p>
+                            </div>
                         </div>
                       </li>
                       <li class="layui-timeline-item">
@@ -155,7 +173,7 @@
             <div class="main-right-div">
                 <div class="aside-div">
                     <blockquote class="layui-elem-quote">
-                        <h1>{{blog['title']}}</h1>
+                        <h1>Welcome !</h1>
                     </blockquote>
                 </div>
 
@@ -208,17 +226,6 @@
     <div class="layui-footer">
         <span>Power By Sedlice Peng </span>
     </div>
-
-
-        <div class="layui-container">
-            <div class="item">
-                <div class="content">
-                    <img src="/static/images/cat.jpg" alt="cat" />
-                    <p>{{blog['content']}}</p>
-                    <img src="{{img}}" alt="cat" />
-                </div>
-            </div>
-        </div>
 </body>
 <script type="text/javascript">
     layui.use(['form', 'element', 'carousel', 'laydate'], function(){
@@ -234,20 +241,14 @@
             autoplay:true
         });
 
-        var the_cal = laydate.render({
+        laydate.render({
             elem: '#blog_calender',
             position: 'static',
             lang: 'en',
             showBottom: false,
             theme: "molv",
             mark:{
-                "0-0-10": "发工资",
-                "0-8-12": "某人的生日"
-            },
-            done: function(value, date){
-                if(date.month === 8 && date.date === 12){
-                  the_cal.hint('某人的生日');
-                }
+
             }
         });
     })

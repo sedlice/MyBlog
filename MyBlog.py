@@ -31,7 +31,7 @@ def register():
         username = request.form["username"]
         pwd = request.form["pwd"]
         age = request.form["age"]
-        conn = MySQLdb.connect(user="root", password="root", host="192.168.10.204")
+        conn = MySQLdb.connect(user="root", password="root", host="localhost")
         conn.select_db("test")
         curr = conn.cursor()
         sql = "INSERT INTO user_t(user_name, password, age) VALUES ('%s', '%s', %d)" % (username, pwd, int(age))
@@ -62,7 +62,7 @@ def login():
         username = request.form.get("username")
         pwd = request.form["pwd"]
         print("username=%s,pwd=%s" % (username, pwd))
-        conn = MySQLdb.connect(user="root", password="root", host="192.168.10.204")
+        conn = MySQLdb.connect(user="root", password="root", host="localhost")
         conn.select_db("test")
         curr = conn.cursor()
         sql = "SELECT user_name FROM user_t WHERE user_name='%s' AND password='%s'" % (username, pwd)
