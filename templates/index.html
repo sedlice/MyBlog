@@ -2,16 +2,22 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Flask框架实例</title>
+    <title>My Blog(by Python&Flask&Layui)</title>
     <link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css"/>
     <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style>
         .layui-header{
+            width: 100%;
+            top: 0px;
             background-color: #393D49;
+            position: fixed;
         }
         .layui-nav{
             float: right;
             width: 900px;
+        }
+        .nav-ul{
+            font-size: 30px;
         }
         .layui-main{
             overflow: hidden;
@@ -21,55 +27,229 @@
             color: #F0F0F0;
             font-weight: lighter;
         }
+        .main-left-div{
+            width: 72%;
+            float: left;
+        }
+        .main-right-div{
+            float: right;
+        }
+        .main-div{
+            margin-top: 60px;
+        }
+        .main-div .layui-main{
+            margin-top: 100px;
+        }
+        .layui-tree li a{
+            font-size: 12px;
+        }
+        .layui-footer{
+            width: 100%;
+            height: 24px;
+            bottom: 0px;
+            background-color: #393D49;
+            position: fixed;
+            color: #ffffff;
+            text-align: center;
+            font-size: 14px;
+            line-height: 24px;
+        }
+        .article-div{
+            margin-top: 30px;
+            background-color: #ffffff;
+            padding: 10px;
+        }
+        .article-panel{
+            border-right: 1px solid #5FB878;
+        }
+        .aside-div{
+            margin-bottom: 50px;
+        }
     </style>
 </head>
-<body>
+<body class="layui-bg-gray">
     <div class="layui-header">
         <div class="layui-main">
             <a class="blog-name" href="/">
                 <span>My Blog</span>
             </a>
-            <ul class="layui-nav" style="text-align: right;">
+            <ul class="layui-nav nav-ul" style="text-align: right;">
             {%for nav in nav_list%}
                 <li class="layui-nav-item">
-{#                    <a href="{{nav}}">{{nav}}</a>#}
+{#                  <a href="{{nav}}">{{nav}}</a>#}
                     <a href="">{{nav}}</a>
                 </li>
             {%endfor%}
-            </ul>
             {%if islogin == '1' %}
-                <span class="layui-badge-rim">欢迎 ,{{username}}!</span>
-                <a href="/logout">退出登录</a>
+                <li class="layui-nav-item">
+                    <span class="layui-badge-rim">欢迎 ,{{username}}!</span>
+                    <a href="/logout">退出登录</a>
+                </li>
             {%else%}
-                <a href="/login">
-                    <span class="layui-badge-rim">{{username}}!</span>
-                </a>
+                <li class="layui-nav-item">
+                    <a href="/login">
+                        <span class="layui-badge-rim">{{username}}!</span>
+                    </a>
+                </li>
             {%endif%}
+            </ul>
         </div>
+    </div>
+    <div class="main-div">
+        <div class="layui-main ">
+            <div class="main-left-div">
+                <div class="layui-carousel" id="carousel">
+                    <div carousel-item>
+                        <div>第一张</div>
+                        <div>第二张</div>
+                        <div>第三张</div>
+                        <div>第四张</div>
+                    </div>
+                </div>
+                <div class="article-div">
+                    <ul class="layui-timeline">
+                      <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text article-panel" style="height: 300px;">
+                          <h3 class="layui-timeline-title">8月18日</h3>
+                          <p>
+                            layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。
+                            <br>不枉近百个日日夜夜与之为伴。因小而大，因弱而强。
+                            <br>无论它能走多远，抑或如何支撑？至少我曾倾注全心，无怨无悔 <i class="layui-icon"></i>
+                          </p>
+                        </div>
+                      </li>
+                      <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text article-panel" style="height: 400px">
+                          <h3 class="layui-timeline-title">8月16日</h3>
+                          <p>杜甫的思想核心是儒家的仁政思想，他有“<em>致君尧舜上，再使风俗淳</em>”的宏伟抱负。个人最爱的名篇有：</p>
+                          <ul>
+                            <li>《登高》</li>
+                            <li>《茅屋为秋风所破歌》</li>
+                          </ul>
+                        </div>
+                      </li>
+                      <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text article-panel" style="height: 300px">
+                          <h3 class="layui-timeline-title">8月15日</h3>
+                          <p>
+                            中国人民抗日战争胜利72周年
+                            <br>常常在想，尽管对这个国家有这样那样的抱怨，但我们的确生在了最好的时代
+                            <br>铭记、感恩
+                            <br>所有为中华民族浴血奋战的英雄将士
+                            <br>永垂不朽
+                          </p>
+                        </div>
+                      </li>
+                      <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text article-panel" style="height: 400px">
+                          <div class="layui-timeline-title">过去</div>
+                        </div>
+                      </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="main-right-div">
+                <div class="aside-div">
+                    <blockquote class="layui-elem-quote">
+                        <h1>{{blog['title']}}</h1>
+                    </blockquote>
+                </div>
+
+                <div class="aside-div">
+                    <div class="layui-inline" id="blog_calender"></div>
+                </div>
+
+                <div class="aside-div">
+                    <fieldset class="layui-elem-field">
+                        <legend>文章分类</legend>
+                        <div class="layui-field-box">
+                            <ul class="layui-tree">
+                                <li class="site-tree-noicon">
+                                    <a href="#">测试1</a>
+                                </li>
+                            {%for key,value in blogtag.items()%}
+                                <li class="site-tree-noicon">
+                                    <a href="">{{key}}({{value}})</a>
+                                </li>
+                            {%endfor%}
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="aside-div">
+                    <fieldset class="layui-elem-field">
+                        <legend>热门文章</legend>
+                        <div class="layui-field-box">
+                            <ul class="layui-tree">
+                                <li class="site-tree-noicon">
+                                    <a href="">文章1</a>
+                                </li>
+                                <li class="site-tree-noicon">
+                                    <a href="">文章2</a>
+                                </li>
+                                <li class="site-tree-noicon">
+                                    <a href="">文章3</a>
+                                </li>
+                                <li class="site-tree-noicon">
+                                    <a href="">文章4</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-footer">
+        <span>Power By Sedlice Peng </span>
     </div>
 
 
         <div class="layui-container">
             <div class="item">
-                <h1>{{blog['title']}}</h1>
                 <div class="content">
                     <img src="/static/images/cat.jpg" alt="cat" />
                     <p>{{blog['content']}}</p>
                     <img src="{{img}}" alt="cat" />
                 </div>
             </div>
-            <div class="side">
-                <ul>
-                    {%for key,value in blogtag.items()%}
-                        <li>{{key}}({{value}})</li>
-                    {%endfor%}
-                </ul>
-            </div>
         </div>
 </body>
 <script type="text/javascript">
-    layui.use(['form', 'element'], function(){
+    layui.use(['form', 'element', 'carousel', 'laydate'], function(){
         var element = layui.element;
+        var carousel = layui.carousel;
+        var laydate = layui.laydate;
+
+        carousel.render({
+            elem:"#carousel",
+            width: "100%",
+            arrow:"hover",
+            anim:"default",
+            autoplay:true
+        });
+
+        var the_cal = laydate.render({
+            elem: '#blog_calender',
+            position: 'static',
+            lang: 'en',
+            showBottom: false,
+            theme: "molv",
+            mark:{
+                "0-0-10": "发工资",
+                "0-8-12": "某人的生日"
+            },
+            done: function(value, date){
+                if(date.month === 8 && date.date === 12){
+                  the_cal.hint('某人的生日');
+                }
+              }
+          });
 
     })
 </script>
