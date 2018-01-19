@@ -31,8 +31,10 @@ def index():
 @app.route("/content")
 def content():
     article_id = request.args.get("ai")
-    print(article_id)
-
+    conn = MySQLdb.connect(user="root", password="root", host="192.168.10.204")
+    conn.select_db("test")
+    curr = conn.cursor()
+    curr.execute("")
     return render_template()
 
 
@@ -45,8 +47,7 @@ def register():
         conn = MySQLdb.connect(user="root", password="root", host="localhost")
         conn.select_db("test")
         curr = conn.cursor()
-        sql = "INSERT INTO user_t(user_name, password, age) VALUES ('%s', '%s', %d)" % (username, pwd, int(age))
-        curr.execute(sql)
+        curr.execute("INSERT INTO user_t(user_name, password, age) VALUES ('%s', '%s', %d)", username, pwd, int(age))
         conn.commit()
         curr.close()
         conn.close()
@@ -77,8 +78,7 @@ def login():
             conn = MySQLdb.connect(user="root", password="root", host="192.168.10.204")
             conn.select_db("test")
             curr = conn.cursor()
-            sql = "SELECT user_name FROM user_t WHERE user_name='%s' AND password='%s'" % (username, pwd)
-            curr.execute(sql)
+            curr.execute("SELECT user_name FROM user_t WHERE user_name='%s' AND password='%s'", username, pwd)
             conn.commit()
             results = curr.fetchall()
             flag = False
