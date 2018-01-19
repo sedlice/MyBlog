@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8"/>
     <title>My Blog(by Python&Flask&Layui)</title>
-    <link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css"/>
-    <script type="text/javascript" src="../static/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css"/>
+    <script type="text/javascript" src="/static/layui/layui.js"></script>
     <style>
         body{
-            background: url("../static/images/bgimg.jpg") no-repeat center fixed;
+            background-color: #f5f6f7;
         }
         .layui-header{
             width: 100%;
@@ -60,7 +60,7 @@
         .article-div{
             margin-top: 30px;
             background-color: #ffffff;
-            padding: 10px;
+            padding: 50px 20px 20px 20px;
         }
         .article-panel{
             border-right: 1px solid #5FB878;
@@ -69,16 +69,36 @@
             margin-bottom: 50px;
             background: rgba(255,255,255,0.5);
             padding: 5px;
-            color: #000000;
         }
-        .aside-div a{
+        .aside-div legend{
             color: #000000;
         }
         .article-img img{
-            width: 400px;
+            width: 300px;
+        }
+        .article-content{
+            margin: 30px 0px;
+            color: #8D8D8D;
+        }
+        .article-title{
+            margin-top: 30px;
+            overflow: hidden;
+            line-height: 45px;
         }
         .article-title a{
-            color: #5FB878;
+            color: #009688 !important;
+            font-size: 40px;
+            text-decoration: none !important;
+        }
+        .article-reads{
+            color: #999999;
+            margin-right: 30px;
+        }
+        #pages{
+            margin: 30px;
+        }
+        .user-div{
+            font-size: 16px;
         }
     </style>
 </head>
@@ -91,22 +111,9 @@
             <ul class="layui-nav nav-ul" style="text-align: right;">
             {%for nav in nav_list%}
                 <li class="layui-nav-item">
-{#                  <a href="{{nav}}">{{nav}}</a>#}
                     <a href="">{{nav}}</a>
                 </li>
             {%endfor%}
-            {%if islogin == '1' %}
-                <li class="layui-nav-item">
-                    <span class="layui-badge-rim">欢迎 ,{{username}}!</span>
-                    <a href="/logout">退出登录</a>
-                </li>
-            {%else%}
-                <li class="layui-nav-item">
-                    <a href="/login">
-                        <span class="layui-badge-rim">{{username}}!</span>
-                    </a>
-                </li>
-            {%endif%}
             </ul>
         </div>
     </div>
@@ -115,46 +122,25 @@
             <div class="main-left-div">
                 <div class="layui-carousel" id="carousel">
                     <div carousel-item>
-                        <div>第一张</div>
-                        <div>第二张</div>
-                        <div>第三张</div>
-                        <div>第四张</div>
+                        <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic1.jpg"/></div>
+                        <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic2.jpg"/></div>
+                        <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic3.jpg"/></div>
+                        <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic4.jpg"/></div>
                     </div>
                 </div>
                 <div class="article-div">
                     <ul class="layui-timeline">
                       <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-content layui-text article-panel" style="height: 300px;">
-                          <h3 class="layui-timeline-title">8月18日</h3>
-                          <p>
-                            layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。
-                            <br>不枉近百个日日夜夜与之为伴。因小而大，因弱而强。
-                            <br>无论它能走多远，抑或如何支撑？至少我曾倾注全心，无怨无悔 <i class="layui-icon"></i>
-                          </p>
-                        </div>
-                      </li>
-                      <li class="layui-timeline-item">
-                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-content layui-text article-panel" style="height: 400px">
-                          <h3 class="layui-timeline-title">8月16日</h3>
-                          <p>杜甫的思想核心是儒家的仁政思想，他有“<em>致君尧舜上，再使风俗淳</em>”的宏伟抱负。个人最爱的名篇有：</p>
-                          <ul>
-                            <li>《登高》</li>
-                            <li>《茅屋为秋风所破歌》</li>
-                          </ul>
-                        </div>
-                      </li>
-                      <li class="layui-timeline-item">
-                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                         <div class="layui-timeline-content layui-text article-panel">
                           <h2 class="layui-timeline-title">8月15日</h2>
                             <div class="article-title">
-                                <h1><a href="">{{blog['title']}}</a></h1>
+                                <a href="">{{blog['title']}}</a>
                             </div>
+                            <p class="article-reads"><i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{blog['reads'] }}）</p>
                             <hr>
                             <div class="article-img">
-                                <img src="{{img}}" alt="cat" />
+                                <img src="{{blog["img"]}}" alt="cat" />
                             </div>
                             <div class="article-content">
                                 <p>{{blog['content']}}</p>
@@ -163,17 +149,26 @@
                       </li>
                       <li class="layui-timeline-item">
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-content layui-text article-panel" style="height: 400px">
-                          <div class="layui-timeline-title">过去</div>
-                        </div>
                       </li>
                     </ul>
                 </div>
+                <div id="pages"></div>
             </div>
             <div class="main-right-div">
                 <div class="aside-div">
                     <blockquote class="layui-elem-quote">
-                        <h1>Welcome !</h1>
+                    <div class="user-div">
+                        <div class="layui-inline">
+                            <img src="{{userinfo['userimg']}}" width="48px" class="layui-circle">
+                        </div>
+                        {%if islogin == '1' %}
+                            <span>欢迎 ,{{userinfo["username"]}}</span>
+                            <a href="/logout">退出登录</a>
+                        {%else%}
+                            <span>{{userinfo["username"]}}</span>
+                            <a href="/login">登录</a>
+                        {%endif%}
+                    </div>
                     </blockquote>
                 </div>
 
@@ -228,17 +223,18 @@
     </div>
 </body>
 <script type="text/javascript">
-    layui.use(['form', 'element', 'carousel', 'laydate'], function(){
+    layui.use(['form', 'element', 'carousel', 'laydate', 'laypage'], function(){
         var element = layui.element;
         var carousel = layui.carousel;
         var laydate = layui.laydate;
+        var laypage = layui.laypage;
 
         carousel.render({
             elem:"#carousel",
             width: "100%",
+            autoplay: true,
             arrow:"hover",
-            anim:"default",
-            autoplay:true
+            anim:"default"
         });
 
         laydate.render({
@@ -251,6 +247,12 @@
 
             }
         });
+
+        laypage.render({
+            elem: "pages",
+            count: 50,
+            limit: 5
+        })
     })
 </script>
 </html>

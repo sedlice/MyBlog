@@ -14,15 +14,17 @@ def index():
     cookies_username = request.cookies.get("username")
     if not cookies_username:
         # return redirect("/login")
-        username = "请登录"
+        username = "请"
+        userimg = url_for("static", filename="images/unknownuser.png")
     else:
         username = cookies_username
+        userimg = url_for("static", filename="images/168.jpg")
+    userinfo = {"username": username, "userimg": userimg}
     islogin = session.get("is_login")
     nav_list = [u"首页", u"经济", u"文化", u"科技", u"娱乐"]
-    blog = {"title": "欢迎来到我的博客", "content": "Hello"}
+    blog = {"title": "欢迎来到我的博客", "content": "博客的第一篇文章（测试）", "reads": "15", "img": url_for("static", filename="images/cat.jpg")}
     blogtag = {"javascript": "10", "python": "50", "shell": "5"}
-    img = url_for("static", filename="images/cat.jpg")
-    return render_template("index.html", nav_list=nav_list, username=username, blog=blog, blogtag=blogtag, img=img, islogin=islogin)
+    return render_template("index.html", nav_list=nav_list, userinfo=userinfo, blog=blog, blogtag=blogtag, islogin=islogin)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -98,4 +100,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    app.run(host="0.0.0.0", port=5000)
