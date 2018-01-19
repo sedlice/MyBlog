@@ -1,0 +1,18 @@
+body{
+    background-color: #f5f6f7;
+    font: 14px Helvetica Neue,Helvetica,PingFang SC,微软雅黑,Tahoma,Arial,sans-serif;
+}
+.layui-header{
+    width: 100%;
+    top: 0px;
+    background-color: #393D49;
+    position: fixed;
+}
+.layui-main{
+    overflow: hidden;
+}
+.blog-name span{
+    font-size: 48px;
+    color: #F0F0F0;
+    font-weight: lighter;
+}

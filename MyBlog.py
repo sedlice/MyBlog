@@ -13,8 +13,7 @@ image_path = os.path.join(os.getcwd(), "static/images")
 def index():
     cookies_username = request.cookies.get("username")
     if not cookies_username:
-        # return redirect("/login")
-        username = "请"
+        username = ""
         userimg = url_for("static", filename="images/unknownuser.png")
     else:
         username = cookies_username
@@ -22,17 +21,27 @@ def index():
     userinfo = {"username": username, "userimg": userimg}
     islogin = session.get("is_login")
     nav_list = [u"首页", u"经济", u"文化", u"科技", u"娱乐"]
-    blog = {"title": "欢迎来到我的博客", "content": "博客的第一篇文章（测试）", "reads": "15", "img": url_for("static", filename="images/cat.jpg")}
-    blogtag = {"javascript": "10", "python": "50", "shell": "5"}
-    return render_template("index.html", nav_list=nav_list, userinfo=userinfo, blog=blog, blogtag=blogtag, islogin=islogin)
+    blog_list = [{"title": "欢迎来到我的博客", "content": "博客的第二篇文章（测试）", "createDate": "1月17日", "reads": "15", "img": url_for("static", filename="images/cat.jpg")},
+            {"title": "第二篇文章", "content": "这是我博客的第一篇文章（测试）", "createDate": "1月9日", "reads": "5", "img": ""}]
+    blog_size = len(blog_list)
+    blog_tag = {"javascript": "10", "python": "50", "shell": "5"}
+    return render_template("index.html", nav_list=nav_list, userinfo=userinfo, blog=blog_list, blogtag=blog_tag, blogsize=blog_size, islogin=islogin)
+
+
+@app.route("/content")
+def content():
+    article_id = request.args.get("ai")
+    print(article_id)
+
+    return render_template()
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form["username"]
-        pwd = request.form["pwd"]
-        age = request.form["age"]
+        username = request.form.get("username")
+        pwd = request.form.get("pwd")
+        age = request.form.get("age")
         conn = MySQLdb.connect(user="root", password="root", host="localhost")
         conn.select_db("test")
         curr = conn.cursor()
@@ -62,42 +71,43 @@ def upload():
 def login():
     if request.method == "POST":
         username = request.form.get("username")
-        pwd = request.form["pwd"]
-        print("username=%s,pwd=%s" % (username, pwd))
-        conn = MySQLdb.connect(user="root", password="root", host="localhost")
-        conn.select_db("test")
-        curr = conn.cursor()
-        sql = "SELECT user_name FROM user_t WHERE user_name='%s' AND password='%s'" % (username, pwd)
-        curr.execute(sql)
-        conn.commit()
-        results = curr.fetchall()
-        flag = False
-        response = make_response(redirect("/"))
-        for row in results:
-            if username == row[0]:
-                response.set_cookie("username", value=username, max_age=300)
-                session["is_login"] = "1"
-                flag = True
-                break
+        if len(username) >= 0:
+            pwd = request.form["pwd"]
+            print("username=%s,pwd=%s" % (username, pwd))
+            conn = MySQLdb.connect(user="root", password="root", host="192.168.10.204")
+            conn.select_db("test")
+            curr = conn.cursor()
+            sql = "SELECT user_name FROM user_t WHERE user_name='%s' AND password='%s'" % (username, pwd)
+            curr.execute(sql)
+            conn.commit()
+            results = curr.fetchall()
+            flag = False
+            response = make_response(redirect("/"))
+            for row in results:
+                if username == row[0]:
+                    response.set_cookie("username", value=username, max_age=300)
+                    session["is_login"] = "1"
+                    flag = True
+                    break
+                else:
+                    session["is_login"] = "0"
+            curr.close()
+            conn.close()
+            if flag:
+                return response
             else:
-                session["is_login"] = "0"
-        curr.close()
-        conn.close()
-        if flag:
-            return response
-        else:
-            return redirect("/login")
+                return render_template("login.html", username=username, tips="用户名或密码错误")
     else:
         return render_template("login.html")
 
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
-    session.clear
+    session["is_login"] = "0"
     response = make_response(redirect("/"))
     response.delete_cookie("username")
     return response
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=8080)

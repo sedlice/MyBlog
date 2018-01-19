@@ -4,32 +4,74 @@
     <meta charset="utf-8"/>
     <title>登录</title>
     <link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css"/>
     <script type="text/javascript" src="../static/layui/layui.js"></script>
 </head>
-<body>
+<body class="layui-bg-black">
     <div class="layui-header">
         <div class="layui-main">
-            <a class="logo" href="login.html">
-                <h1>My Blog</h1>
+            <a class="blog-name" href="/">
+                <span>My Blog</span>
             </a>
         </div>
     </div>
-    <div class="container">
-        <div class="item">
-            <form action="" method="post">
-                <input type="text" placeholder="请输入用户名" name="username" /><br/>
-                <input type="password" placeholder="请输入密码" name="pwd" /><br/>
-                <input type="submit" value="登录"/>
+    <div class="layui-main">
+        <div class="main-div">
+            <form action="/login" class="layui-form" method="post">
+                <div class="layui-field-box">
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                        <legend>登录</legend>
+                    </fieldset>
+                    <div class="form-div">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" lay-verify="uname" lay-verType="tips" placeholder="请输入账户" autocomplete="off" value="{{ username }}" class="layui-input"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" name="pwd" lay-verify="pass" lay-verType="tips" placeholder="请输入密码" autocomplete="off" class="layui-input"/>
+                            </div>
+                            <div class="layui-form-mid layui-word-aux tip-div">{{ tips }}</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="*">登录</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
-        </div>
-        <div>
-            <a href="/register">还没有帐号？点击注册</a>
         </div>
     </div>
 </body>
 <script type="text/javascript">
     layui.use(['form'], function () {
+        var form = layui.form;
 
+        form.verify({
+            uname: function (value) {
+                if(value.length <= 0){
+                    return "请填写账户号";
+                }
+            },
+            pass: function (value) {
+                if(value.length <= 0){
+                    return "请填写密码";
+                }
+            }
+        });
+
+        form.on('submit(*)', function(data) {
+            if(data.field.username.length <= 0 || data.field.pwd.length <= 0){
+                return false;
+            }else {
+                return true;
+            }
+        });
     })
 </script>
 </html>

@@ -1,0 +1,70 @@
+.layui-nav{
+    float: right;
+    width: 900px;
+}
+.main-div{
+    margin-top: 60px;
+}
+.nav-ul{
+    font-size: 30px;
+}
+.main-left-div{
+    width: 72%;
+    float: left;
+}
+.main-right-div{
+    float: right;
+}
+.main-div .layui-main{
+    margin-top: 100px;
+}
+.layui-tree li a{
+    font-size: 12px;
+}
+.article-div{
+    margin-top: 30px;
+    background-color: #ffffff;
+    padding: 50px 20px 20px 20px;
+}
+.article-panel{
+    border-right: 1px solid #5FB878;
+}
+.aside-div{
+    margin-bottom: 50px;
+    background: rgba(255,255,255,0.5);
+    padding: 5px;
+}
+.aside-div legend{
+    color: #000000;
+}
+.article-img img{
+    width: 300px;
+}
+.article-content{
+    margin: 30px 0px;
+    color: #8D8D8D;
+}
+.article-title{
+    margin-top: 30px;
+    overflow: hidden;
+    line-height: 45px;
+}
+.article-title a{
+    color: #009688 !important;
+    font-size: 40px;
+    text-decoration: none !important;
+}
+.article-reads{
+    color: #999999;
+    margin-right: 30px;
+}
+#pages{
+    margin: 30px;
+}
+.user-div{
+    font-size: 16px;
+}
+.user-div a{
+    float: right;
+    line-height: 48px;
+}

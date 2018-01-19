@@ -4,103 +4,9 @@
     <meta charset="utf-8"/>
     <title>My Blog(by Python&Flask&Layui)</title>
     <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
     <script type="text/javascript" src="/static/layui/layui.js"></script>
-    <style>
-        body{
-            background-color: #f5f6f7;
-        }
-        .layui-header{
-            width: 100%;
-            top: 0px;
-            background-color: #393D49;
-            position: fixed;
-        }
-        .layui-nav{
-            float: right;
-            width: 900px;
-        }
-        .nav-ul{
-            font-size: 30px;
-        }
-        .layui-main{
-            overflow: hidden;
-        }
-        .blog-name span{
-            font-size: 48px;
-            color: #F0F0F0;
-            font-weight: lighter;
-        }
-        .main-left-div{
-            width: 72%;
-            float: left;
-        }
-        .main-right-div{
-            float: right;
-        }
-        .main-div{
-            margin-top: 60px;
-        }
-        .main-div .layui-main{
-            margin-top: 100px;
-        }
-        .layui-tree li a{
-            font-size: 12px;
-        }
-        .layui-footer{
-            width: 100%;
-            height: 24px;
-            bottom: 0px;
-            background-color: #393D49;
-            position: fixed;
-            color: #ffffff;
-            text-align: center;
-            font-size: 14px;
-            line-height: 24px;
-        }
-        .article-div{
-            margin-top: 30px;
-            background-color: #ffffff;
-            padding: 50px 20px 20px 20px;
-        }
-        .article-panel{
-            border-right: 1px solid #5FB878;
-        }
-        .aside-div{
-            margin-bottom: 50px;
-            background: rgba(255,255,255,0.5);
-            padding: 5px;
-        }
-        .aside-div legend{
-            color: #000000;
-        }
-        .article-img img{
-            width: 300px;
-        }
-        .article-content{
-            margin: 30px 0px;
-            color: #8D8D8D;
-        }
-        .article-title{
-            margin-top: 30px;
-            overflow: hidden;
-            line-height: 45px;
-        }
-        .article-title a{
-            color: #009688 !important;
-            font-size: 40px;
-            text-decoration: none !important;
-        }
-        .article-reads{
-            color: #999999;
-            margin-right: 30px;
-        }
-        #pages{
-            margin: 30px;
-        }
-        .user-div{
-            font-size: 16px;
-        }
-    </style>
 </head>
 <body class="layui-bg-gray">
     <div class="layui-header">
@@ -124,32 +30,36 @@
                     <div carousel-item>
                         <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic1.jpg"/></div>
                         <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic2.jpg"/></div>
-                        <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic3.jpg"/></div>
+                        <div class="carousel-img-div" align="center"><a href="/content?ai=1"><img style="max-width: 820px" src="/static/images/pic3.jpg"/></a></div>
                         <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic4.jpg"/></div>
                     </div>
                 </div>
                 <div class="article-div">
                     <ul class="layui-timeline">
-                      <li class="layui-timeline-item">
-                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                        <div class="layui-timeline-content layui-text article-panel">
-                          <h2 class="layui-timeline-title">8月15日</h2>
-                            <div class="article-title">
-                                <a href="">{{blog['title']}}</a>
+                    {% for foo in blog %}
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                            <div class="layui-timeline-content layui-text article-panel">
+                                <h2 class="layui-timeline-title">{{ foo["createDate"] }}</h2>
+                                <div class="article-title">
+                                    <a href="">{{foo['title']}}</a>
+                                </div>
+                                <p class="article-reads"><i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{foo['reads'] }}）</p>
+                                <hr/>
+                                <div class="article-img">
+                                    {% if foo["img"] != "" %}
+                                        <img src="{{foo["img"]}}" alt=""/>
+                                    {% endif %}
+                                </div>
+                                <div class="article-content">
+                                    <p>{{foo['content']}}</p>
+                                </div>
                             </div>
-                            <p class="article-reads"><i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{blog['reads'] }}）</p>
-                            <hr>
-                            <div class="article-img">
-                                <img src="{{blog["img"]}}" alt="cat" />
-                            </div>
-                            <div class="article-content">
-                                <p>{{blog['content']}}</p>
-                            </div>
-                        </div>
-                      </li>
-                      <li class="layui-timeline-item">
-                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                      </li>
+                        </li>
+                    {% endfor %}
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        </li>
                     </ul>
                 </div>
                 <div id="pages"></div>
@@ -162,10 +72,10 @@
                             <img src="{{userinfo['userimg']}}" width="48px" class="layui-circle">
                         </div>
                         {%if islogin == '1' %}
-                            <span>欢迎 ,{{userinfo["username"]}}</span>
+                            <span>欢迎 ，{{userinfo["username"]}}</span>
                             <a href="/logout">退出登录</a>
                         {%else%}
-                            <span>{{userinfo["username"]}}</span>
+                            <span></span>
                             <a href="/login">登录</a>
                         {%endif%}
                     </div>
@@ -218,9 +128,6 @@
             </div>
         </div>
     </div>
-    <div class="layui-footer">
-        <span>Power By Sedlice Peng </span>
-    </div>
 </body>
 <script type="text/javascript">
     layui.use(['form', 'element', 'carousel', 'laydate', 'laypage'], function(){
@@ -250,7 +157,7 @@
 
         laypage.render({
             elem: "pages",
-            count: 50,
+            count: {{ blogsize }},
             limit: 5
         })
     })
