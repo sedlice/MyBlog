@@ -31,7 +31,7 @@ def index():
 @app.route("/content")
 def content():
     article_id = request.args.get("ai")
-    conn = MySQLdb.connect(user="root", password="root", host="192.168.10.204")
+    conn = MySQLdb.connect(user="root", password="root", host="localhost")
     conn.select_db("test")
     curr = conn.cursor()
     curr.execute("")
@@ -75,7 +75,7 @@ def login():
         if len(username) >= 0:
             pwd = request.form["pwd"]
             print("username=%s,pwd=%s" % (username, pwd))
-            conn = MySQLdb.connect(user="root", password="root", host="192.168.10.204")
+            conn = MySQLdb.connect(user="root", password="root", host="localhost")
             conn.select_db("test")
             curr = conn.cursor()
             curr.execute("SELECT user_name FROM user_t WHERE user_name='%s' AND password='%s'", username, pwd)

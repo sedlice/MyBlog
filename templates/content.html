@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="utf-8"/>
+    <title>My Blog(by Python&Flask&Layui)</title>
+    <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/common.css">
+    <script type="text/javascript" src="/static/layui/layui.js"></script>
 </head>
-<body>
+<body class="layui-bg-gray">
+    <div class="layui-header">
+        <div class="layui-main">
+            <a class="blog-name" href="/">
+                <span>My Blog</span>
+            </a>
+            <ul class="layui-nav nav-ul" style="text-align: right;">
+            {%for nav in nav_list%}
+                <li class="layui-nav-item">
+                    <a href="">{{nav}}</a>
+                </li>
+            {%endfor%}
+            </ul>
+        </div>
+    </div>
+    <div>
+
+    </div>
 
 </body>
 </html>
