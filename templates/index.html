@@ -28,10 +28,21 @@
             <div class="main-left-div">
                 <div class="layui-carousel" id="carousel">
                     <div carousel-item>
-                        <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic1.jpg"/></div>
-                        <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic2.jpg"/></div>
-                        <div class="carousel-img-div" align="center"><a href="/content?ai=1"><img style="max-width: 820px" src="/static/images/pic3.jpg"/></a></div>
-                        <div class="carousel-img-div" align="center"><img style="max-width: 820px" src="/static/images/pic4.jpg"/></div>
+                        <div class="carousel-img-div" align="center">
+                            <span>文字1</span>
+                            <img style="max-width: 820px" src="/static/images/pic1.jpg"/>
+                        </div>
+                        <div class="carousel-img-div" align="center">
+                            <img style="max-width: 820px" src="/static/images/pic2.jpg"/>
+                        </div>
+                        <div class="carousel-img-div" align="center">
+                            <a href="/content?ai=1">
+                                <img style="max-width: 820px" src="/static/images/pic3.jpg"/>
+                            </a>
+                        </div>
+                        <div class="carousel-img-div" align="center">
+                            <img style="max-width: 820px" src="/static/images/pic4.jpg"/>
+                        </div>
                     </div>
                 </div>
                 <div class="article-div">
@@ -93,25 +104,6 @@
                 </div>
 
                 <div class="aside-div">
-                    <div class="layui-inline" id="blog_calender"></div>
-                </div>
-
-                <div class="aside-div">
-                    <fieldset class="layui-elem-field">
-                        <legend>文章分类</legend>
-                        <div class="layui-field-box">
-                            <ul class="layui-tree">
-                            {%for tag in blogtag%}
-                                <li class="site-tree-noicon">
-                                    <a href="">{{tag}}</a>
-                                </li>
-                            {%endfor%}
-                            </ul>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div class="aside-div">
                     <fieldset class="layui-elem-field">
                         <legend>热门文章</legend>
                         <div class="layui-field-box">
@@ -131,6 +123,25 @@
                             </ul>
                         </div>
                     </fieldset>
+                </div>
+
+                <div class="aside-div">
+                    <fieldset class="layui-elem-field">
+                        <legend>文章分类</legend>
+                        <div class="layui-field-box">
+                            <ul class="layui-tree">
+                            {%for tag in blogtag%}
+                                <li class="site-tree-noicon">
+                                    <a href="">{{tag}}</a>
+                                </li>
+                            {%endfor%}
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="aside-div">
+                    <div class="layui-inline" id="blog_calender"></div>
                 </div>
             </div>
         </div>

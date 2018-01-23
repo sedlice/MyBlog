@@ -12,17 +12,23 @@ image_path = os.path.join(os.getcwd(), "static/images")
 
 @app.route('/')
 def index():
+    "获取首页所需数据"
+    # 基础连接信息
     islogin = session.get("is_login")
     cookies_uid = request.cookies.get("uid")
     conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
     conn.select_db("blog")
     curr = conn.cursor()
+
+    # 获取导航栏项
     curr.execute("SELECT id,navname FROM nav_t")
     conn.commit()
     results = curr.fetchall()
     nav_list = []
     for row in results:
         nav_list.append(row[1])
+
+    # 获取博客文章信息
     curr.execute("SELECT id,title,content,imgpath,readings,createdate,tags,description FROM article_t ORDER BY id DESC")
     conn.commit()
     results = curr.fetchall()
@@ -43,12 +49,40 @@ def index():
         blog["description"] = row[7]
         blog_list.append(blog)
     blog_size = len(blog_list)
+
+    # 获取轮播文章
+    curr.execute("SELECT id,title,imgpath FROM article_t WHERE imgpath <> '' ORDER BY readings DESC LIMIT 4")
+    conn.commit()
+    results = curr.fetchall()
+    carousel_list = []
+    for row in results:
+        carousel = {}
+        carousel["id"] = row[0]
+        carousel["title"] = row[1]
+        imgurl = "images/%s" % row[3]
+        carousel["imgpath"] = url_for("static", filename=imgurl)
+        carousel_list.append(carousel)
+
+    # 获取标签项
     curr.execute("SELECT id,tag FROM tag_t")
     conn.commit()
     results = curr.fetchall()
     tag_list = []
     for row in results:
         tag_list.append(row[1])
+
+    # 获取热门文章
+    curr.execute("SELECT id,title FROM article_t ORDER BY readings DESC LIMIT 10")
+    conn.commit()
+    results = curr.fetchall()
+    hot_list = []
+    for row in results:
+        hot = {}
+        hot["id"] = row[0]
+        hot["title"] = row[1]
+        hot_list.append(hot)
+
+    # 获取用户信息
     if not cookies_uid:
         loginusername = ""
         userimg = url_for("static", filename="images/unknownuser.png")
@@ -69,11 +103,16 @@ def index():
         loginusername = userinfo.realname
         imgurl = "images/%s" % userinfo.imgpath
         userimg = url_for("static", filename=imgurl)
-    return render_template("index.html", nav_list=nav_list, loginusername=loginusername, userimg=userimg, userinfo=userinfo, blog=blog_list, blogtag=tag_list, blogsize=blog_size, islogin=islogin)
+
+    # 返回数据
+    return render_template("index.html", nav_list=nav_list, loginusername=loginusername, userimg=userimg,
+                           userinfo=userinfo, blog=blog_list, blogtag=tag_list, blogsize=blog_size, islogin=islogin,
+                           carousel_list=carousel_list, hot_list=hot_list)
 
 
 @app.route("/content")
 def content():
+    "获取文章页内容"
     article_id = request.args.get("ai")
     conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
     conn.select_db("blog")
@@ -84,6 +123,7 @@ def content():
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
+    "更新方法"
     if request.method == "POST":
         username = request.form["username"]
         file = request.files["img"]
@@ -96,6 +136,7 @@ def upload():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    "登录方法"
     if request.method == "POST":
         username = request.form.get("username")
         if len(username) >= 0:
@@ -127,6 +168,7 @@ def login():
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
+    "登出方法"
     session["is_login"] = "0"
     response = make_response(redirect("/"))
     response.delete_cookie("uid")
