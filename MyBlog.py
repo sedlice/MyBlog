@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, make_response, session
 import os
 import MySQLdb
+import User
 
 
 app = Flask(__name__)
@@ -11,49 +12,74 @@ image_path = os.path.join(os.getcwd(), "static/images")
 
 @app.route('/')
 def index():
-    cookies_username = request.cookies.get("username")
-    if not cookies_username:
-        username = ""
-        userimg = url_for("static", filename="images/unknownuser.png")
-    else:
-        username = cookies_username
-        userimg = url_for("static", filename="images/168.jpg")
-    userinfo = {"username": username, "userimg": userimg}
     islogin = session.get("is_login")
-    nav_list = [u"首页", u"经济", u"文化", u"科技", u"娱乐"]
-    blog_list = [{"title": "欢迎来到我的博客", "content": "博客的第二篇文章（测试）", "createDate": "1月17日", "reads": "15", "img": url_for("static", filename="images/cat.jpg")},
-            {"title": "第二篇文章", "content": "这是我博客的第一篇文章（测试）", "createDate": "1月9日", "reads": "5", "img": ""}]
+    cookies_uid = request.cookies.get("uid")
+    conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
+    conn.select_db("blog")
+    curr = conn.cursor()
+    curr.execute("SELECT id,navname FROM nav_t")
+    conn.commit()
+    results = curr.fetchall()
+    nav_list = []
+    for row in results:
+        nav_list.append(row[1])
+    curr.execute("SELECT id,title,content,imgpath,readings,createdate,tags,description FROM article_t ORDER BY id DESC")
+    conn.commit()
+    results = curr.fetchall()
+    blog_list = []
+    for row in results:
+        blog = {}
+        blog["id"] = row[0]
+        blog["title"] = row[1]
+        blog["content"] = row[2]
+        if row[3] is not None:
+            imgurl = "images/%s" % row[3]
+            blog["imgpath"] = url_for("static", filename=imgurl)
+        else:
+            blog["imgpath"] = ""
+        blog["readings"] = row[4]
+        blog["createdate"] = row[5]
+        blog["tags"] = row[6]
+        blog["description"] = row[7]
+        blog_list.append(blog)
     blog_size = len(blog_list)
-    blog_tag = {"javascript": "10", "python": "50", "shell": "5"}
-    return render_template("index.html", nav_list=nav_list, userinfo=userinfo, blog=blog_list, blogtag=blog_tag, blogsize=blog_size, islogin=islogin)
+    curr.execute("SELECT id,tag FROM tag_t")
+    conn.commit()
+    results = curr.fetchall()
+    tag_list = []
+    for row in results:
+        tag_list.append(row[1])
+    if not cookies_uid:
+        loginusername = ""
+        userimg = url_for("static", filename="images/unknownuser.png")
+        userinfo = None
+    else:
+        curr.execute("SELECT id,username,realname,imgpath,access,description FROM user_t WHERE id = %s", cookies_uid)
+        conn.commit()
+        results = curr.fetchall()
+        userinfo = User.User()
+        userinfo.uid = cookies_uid
+        userinfo.username = results[0][1]
+        userinfo.realname = results[0][2]
+        userinfo.imgpath = results[0][3]
+        if len(userinfo.imgpath) <= 0:
+            userinfo.imgpath = "unknownuser.png"
+        userinfo.access = results[0][4]
+        userinfo.description = results[0][5]
+        loginusername = userinfo.realname
+        imgurl = "images/%s" % userinfo.imgpath
+        userimg = url_for("static", filename=imgurl)
+    return render_template("index.html", nav_list=nav_list, loginusername=loginusername, userimg=userimg, userinfo=userinfo, blog=blog_list, blogtag=tag_list, blogsize=blog_size, islogin=islogin)
 
 
 @app.route("/content")
 def content():
     article_id = request.args.get("ai")
-    conn = MySQLdb.connect(user="root", password="root", host="localhost")
-    conn.select_db("test")
+    conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
+    conn.select_db("blog")
     curr = conn.cursor()
     curr.execute("")
     return render_template()
-
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        username = request.form.get("username")
-        pwd = request.form.get("pwd")
-        age = request.form.get("age")
-        conn = MySQLdb.connect(user="root", password="root", host="localhost")
-        conn.select_db("test")
-        curr = conn.cursor()
-        curr.execute("INSERT INTO user_t(user_name, password, age) VALUES ('%s', '%s', %d)", username, pwd, int(age))
-        conn.commit()
-        curr.close()
-        conn.close()
-        return redirect("/login")
-    else:
-        return render_template("register.html")
 
 
 @app.route("/upload", methods=["GET", "POST"])
@@ -73,24 +99,22 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         if len(username) >= 0:
-            pwd = request.form["pwd"]
-            print("username=%s,pwd=%s" % (username, pwd))
-            conn = MySQLdb.connect(user="root", password="root", host="localhost")
-            conn.select_db("test")
+            pwd = request.form.get("pwd")
+            conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
+            conn.select_db("blog")
             curr = conn.cursor()
-            curr.execute("SELECT user_name FROM user_t WHERE user_name='%s' AND password='%s'", username, pwd)
+            curr.execute("SELECT id FROM user_t WHERE username=%s AND password=%s", (username, pwd))
             conn.commit()
             results = curr.fetchall()
             flag = False
             response = make_response(redirect("/"))
-            for row in results:
-                if username == row[0]:
-                    response.set_cookie("username", value=username, max_age=300)
-                    session["is_login"] = "1"
-                    flag = True
-                    break
-                else:
-                    session["is_login"] = "0"
+            uid = results[0][0]
+            if uid > 0:
+                response.set_cookie("uid", value=str(uid))
+                session["is_login"] = "1"
+                flag = True
+            else:
+                session["is_login"] = "0"
             curr.close()
             conn.close()
             if flag:
@@ -105,9 +129,9 @@ def login():
 def logout():
     session["is_login"] = "0"
     response = make_response(redirect("/"))
-    response.delete_cookie("username")
+    response.delete_cookie("uid")
     return response
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=8080)
+    app.run(debug=True, host="127.0.0.1", port=8086)

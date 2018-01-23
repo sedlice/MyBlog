@@ -40,15 +40,15 @@
                         <li class="layui-timeline-item">
                             <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                             <div class="layui-timeline-content layui-text article-panel">
-                                <h2 class="layui-timeline-title">{{ foo["createDate"] }}</h2>
+                                <h2 class="layui-timeline-title">{{ foo["createdate"] }}</h2>
                                 <div class="article-title">
                                     <a href="">{{foo['title']}}</a>
                                 </div>
-                                <p class="article-reads"><i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{foo['reads'] }}）</p>
+                                <p class="article-reads"><i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{foo['readings'] }}）</p>
                                 <hr/>
                                 <div class="article-img">
-                                    {% if foo["img"] != "" %}
-                                        <img src="{{foo["img"]}}" alt=""/>
+                                    {% if foo["imgpath"] != ""%}
+                                        <img src="{{foo["imgpath"]}}" alt=""/>
                                     {% endif %}
                                 </div>
                                 <div class="article-content">
@@ -58,7 +58,7 @@
                         </li>
                     {% endfor %}
                         <li class="layui-timeline-item">
-                            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                            <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis">&#xe63e;</i>
                         </li>
                     </ul>
                 </div>
@@ -69,15 +69,25 @@
                     <blockquote class="layui-elem-quote">
                     <div class="user-div">
                         <div class="layui-inline">
-                            <img src="{{userinfo['userimg']}}" width="48px" class="layui-circle">
+                            <ul class="layui-nav user-ul">
+                                <li class="layui-nav-item">
+                                    <a href="">
+                                        <img src="{{userimg}}" width="48px" class="layui-circle"/>
+                                        {%if islogin == '1' %}
+                                            <span class="user-span">{{ loginusername }}</span>
+                                        <dl class="layui-nav-child">
+                                            <dd><a href="/logout">退出</a></dd>
+                                        </dl>
+                                        {%else%}
+                                            <span class="user-span">欢迎</span>
+                                        <dl class="layui-nav-child">
+                                             <dd><a href="/login">登录</a></dd>
+                                        </dl>
+                                        {%endif%}
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                        {%if islogin == '1' %}
-                            <span>欢迎 ，{{userinfo["username"]}}</span>
-                            <a href="/logout">退出登录</a>
-                        {%else%}
-                            <span></span>
-                            <a href="/login">登录</a>
-                        {%endif%}
                     </div>
                     </blockquote>
                 </div>
@@ -91,12 +101,9 @@
                         <legend>文章分类</legend>
                         <div class="layui-field-box">
                             <ul class="layui-tree">
+                            {%for tag in blogtag%}
                                 <li class="site-tree-noicon">
-                                    <a href="#">测试1</a>
-                                </li>
-                            {%for key,value in blogtag.items()%}
-                                <li class="site-tree-noicon">
-                                    <a href="">{{key}}({{value}})</a>
+                                    <a href="">{{tag}}</a>
                                 </li>
                             {%endfor%}
                             </ul>

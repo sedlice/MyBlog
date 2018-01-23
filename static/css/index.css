@@ -1,4 +1,4 @@
-.layui-nav{
+.layui-header .layui-nav{
     float: right;
     width: 900px;
 }
@@ -64,7 +64,9 @@
 .user-div{
     font-size: 16px;
 }
-.user-div a{
-    float: right;
-    line-height: 48px;
+.user-ul{
+    background-color: #f2f2f2;
+}
+.user-span{
+    color: #000000;
 }
