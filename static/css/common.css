@@ -1,5 +1,5 @@
 body{
-    background: url("/static/images/bg_50.png") no-repeat fixed center;
+    background: url("/static/images/bg.jpg") no-repeat fixed center;
     font: 14px Helvetica Neue,Helvetica,PingFang SC,微软雅黑,Tahoma,Arial,sans-serif;
 }
 .layui-header{

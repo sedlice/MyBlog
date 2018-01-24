@@ -8,6 +8,19 @@
 .nav-ul{
     font-size: 30px;
 }
+.carousel-img-div{
+    position: relative;
+}
+.carousel-text{
+    position: absolute;
+    z-index: 1;
+    bottom: 14px;
+    left: 14px;
+    background: rgba(0,0,0,0.5);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+}
 .main-left-div{
     width: 72%;
     float: left;
@@ -21,6 +34,9 @@
 .layui-tree li a{
     font-size: 12px;
 }
+.layui-timeline-title{
+    cursor: default;
+}
 .article-div{
     margin-top: 30px;
     background-color: #ffffff;
@@ -28,14 +44,17 @@
 }
 .article-panel{
     border-right: 1px solid #5FB878;
+    padding-right: 25px;
 }
 .aside-div{
     margin-bottom: 50px;
     background: rgba(255,255,255,0.5);
     padding: 5px;
+    color: #777777;
 }
-.aside-div legend{
-    color: #000000;
+.aside-div a{
+    color: #777777;
+    text-decoration: underline;
 }
 .article-img img{
     width: 300px;
@@ -43,6 +62,11 @@
 .article-content{
     margin: 30px 0px;
     color: #8D8D8D;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:7;
 }
 .article-title{
     margin-top: 30px;

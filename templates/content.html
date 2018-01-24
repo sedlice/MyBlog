@@ -5,6 +5,7 @@
     <title>My Blog(by Python&Flask&Layui)</title>
     <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="/static/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/content.css">
     <script type="text/javascript" src="/static/layui/layui.js"></script>
 </head>
 <body class="layui-bg-gray">
@@ -22,9 +23,124 @@
             </ul>
         </div>
     </div>
-    <div>
+    <div class="main-div">
+        <div class="layui-main">
+            <div class="main-left-div">
+                <div class="article-div">
+                    <div class="article-paper-div">
+                        <div class="article-title">
+                            <p class="title-head">{{ blog["title"] }}</p>
+                            <p class="title-tag">标签：
+                            {% for t in a_tag_list %}
+                                <a href="{{ t["id"] }}">
+                                    <span class="layui-badge layui-bg-green">{{ t["tag"] }}</span>
+                                </a>
+                            {% endfor %}
+                            </p>
+                            <p class="article-reads layui-unselect">
+                                <i class="layui-icon">&#xe637;</i> 写于 {{ blog["createdate"] }}
+                                <i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{ blog["readings"] }}）
+                            </p>
+                        </div>
+                        <hr/>
+                        <div class="article-description">
+                            <blockquote class="layui-elem-quote layui-quote-nm">
+                                {{ blog["description"] }}
+                            </blockquote>
+                        </div>
+                        <div class="article-content">{{ blog["content"] }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-right-div">
+                <div class="aside-div">
+                    <blockquote class="layui-elem-quote">
+                    <div class="user-div">
+                        <div class="layui-inline">
+                            <ul class="layui-nav user-ul">
+                                <li class="layui-nav-item">
+                                    <a href="">
+                                        <img src="{{userimg}}" width="48px" class="layui-circle"/>
+                                        {%if islogin == '1' %}
+                                            <span class="user-span">{{ loginusername }}</span>
+                                        <dl class="layui-nav-child">
+                                            <dd><a href="/writer">写博客</a></dd>
+                                            <dd><a href="/logout">退出</a></dd>
+                                        </dl>
+                                        {%else%}
+                                            <span class="user-span">欢迎</span>
+                                        <dl class="layui-nav-child">
+                                             <dd><a href="/login">登录</a></dd>
+                                        </dl>
+                                        {%endif%}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    </blockquote>
+                </div>
 
+                <div class="aside-div">
+                    <fieldset class="layui-elem-field">
+                        <legend>热门文章</legend>
+                        <div class="layui-field-box">
+                            <ul class="layui-tree">
+                                {% for hot in hot_list %}
+                                <li class="site-tree-noicon">
+                                    <a href="/content?ai={{ hot["id"] }}">{{ hot["title"] }}</a>
+                                </li>
+                                {% endfor %}
+                                <li class="site-tree-noicon">
+                                    <a href="/content?ai=1">测试文章1</a>
+                                </li>
+                                <li class="site-tree-noicon">
+                                    <a href="/content?ai=1">测试文章2</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="aside-div">
+                    <fieldset class="layui-elem-field">
+                        <legend>文章分类</legend>
+                        <div class="layui-field-box">
+                            <ul class="layui-tree">
+                            {%for tag in blogtag%}
+                                <li class="site-tree-noicon">
+                                    <a href="/category?id={{ tag["id"] }}">{{ tag["name"] }}</a>
+                                </li>
+                            {%endfor%}
+                                <li class="site-tree-noicon">
+                                    <a href="/category?id=1">个人</a>
+                                </li>
+                                <li class="site-tree-noicon">
+                                    <a href="/category?id=2">测试</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="aside-div">
+                    <div class="layui-inline" id="blog_calender"></div>
+                </div>
+            </div>
+        </div>
     </div>
-
 </body>
+<script type="text/javascript">
+    layui.use(['element', 'laydate'], function(){
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#blog_calender',
+            position: 'static',
+            lang: 'en',
+            showBottom: false,
+            theme: "molv"
+        });
+    })
+</script>
 </html>

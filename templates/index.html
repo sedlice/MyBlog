@@ -28,21 +28,14 @@
             <div class="main-left-div">
                 <div class="layui-carousel" id="carousel">
                     <div carousel-item>
+                        {% for carousel in carousel_list %}
                         <div class="carousel-img-div" align="center">
-                            <span>文字1</span>
-                            <img style="max-width: 820px" src="/static/images/pic1.jpg"/>
-                        </div>
-                        <div class="carousel-img-div" align="center">
-                            <img style="max-width: 820px" src="/static/images/pic2.jpg"/>
-                        </div>
-                        <div class="carousel-img-div" align="center">
-                            <a href="/content?ai=1">
-                                <img style="max-width: 820px" src="/static/images/pic3.jpg"/>
+                            <a href="/content?ai={{ carousel["id"] }}">
+                                <span class="carousel-text">{{ carousel["title"] }}</span>
+                                <img style="max-width: 820px" src="{{ carousel["imgpath"] }}"/>
                             </a>
                         </div>
-                        <div class="carousel-img-div" align="center">
-                            <img style="max-width: 820px" src="/static/images/pic4.jpg"/>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="article-div">
@@ -53,17 +46,17 @@
                             <div class="layui-timeline-content layui-text article-panel">
                                 <h2 class="layui-timeline-title">{{ foo["createdate"] }}</h2>
                                 <div class="article-title">
-                                    <a href="">{{foo['title']}}</a>
+                                    <a href="/content?ai={{ foo["id"] }}">{{foo['title']}}</a>
                                 </div>
-                                <p class="article-reads"><i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{foo['readings'] }}）</p>
+                                <p class="article-reads layui-unselect"><i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{foo['readings'] }}）</p>
                                 <hr/>
                                 <div class="article-img">
                                     {% if foo["imgpath"] != ""%}
                                         <img src="{{foo["imgpath"]}}" alt=""/>
                                     {% endif %}
                                 </div>
-                                <div class="article-content">
-                                    <p>{{foo['content']}}</p>
+                                <div class="article-content layui-text">
+                                    <p class="layui-unselect">{{foo['content']}}</p>
                                 </div>
                             </div>
                         </li>
@@ -87,6 +80,7 @@
                                         {%if islogin == '1' %}
                                             <span class="user-span">{{ loginusername }}</span>
                                         <dl class="layui-nav-child">
+                                            <dd><a href="/writer">写博客</a></dd>
                                             <dd><a href="/logout">退出</a></dd>
                                         </dl>
                                         {%else%}
@@ -108,18 +102,11 @@
                         <legend>热门文章</legend>
                         <div class="layui-field-box">
                             <ul class="layui-tree">
+                                {% for hot in hot_list %}
                                 <li class="site-tree-noicon">
-                                    <a href="">文章1</a>
+                                    <a href="/content?ai={{ hot["id"] }}">{{ hot["title"] }}</a>
                                 </li>
-                                <li class="site-tree-noicon">
-                                    <a href="">文章2</a>
-                                </li>
-                                <li class="site-tree-noicon">
-                                    <a href="">文章3</a>
-                                </li>
-                                <li class="site-tree-noicon">
-                                    <a href="">文章4</a>
-                                </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </fieldset>
@@ -132,7 +119,7 @@
                             <ul class="layui-tree">
                             {%for tag in blogtag%}
                                 <li class="site-tree-noicon">
-                                    <a href="">{{tag}}</a>
+                                    <a href="/category?id={{ tag["id"] }}">{{ tag["name"] }}</a>
                                 </li>
                             {%endfor%}
                             </ul>
@@ -176,7 +163,13 @@
         laypage.render({
             elem: "pages",
             count: {{ blogsize }},
-            limit: 5
+            limit: 10,
+            curr: {{ target_page }},
+            jump: function (obj, first) {
+                if(!first){
+                    location.href = "/index?target_page="+obj.curr
+                }
+            }
         })
     })
 </script>
