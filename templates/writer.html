@@ -28,27 +28,33 @@
             <div class="main-left-div">
                 <div class="article-div">
                     <div class="article-paper-div">
-                        <div class="article-title">
-                            <p class="title-head">{{ blog["title"] }}</p>
-                            <p class="title-tag">标签：
-                            {% for t in a_tag_list %}
-                                <a href="{{ t["id"] }}">
-                                    <span class="layui-badge layui-bg-green">{{ t["tag"] }}</span>
-                                </a>
-                            {% endfor %}
-                            </p>
-                            <p class="article-reads layui-unselect">
-                                <i class="layui-icon">&#xe637;</i> 写于 {{ blog["createdate"] }}
-                                <i class="layui-icon">&#xe705;</i>&nbsp;阅读（{{ blog["readings"] }}）
-                            </p>
-                        </div>
-                        <hr/>
-                        <div class="article-description">
-                            <blockquote class="layui-elem-quote layui-quote-nm">
-                                {{ blog["description"] }}
-                            </blockquote>
-                        </div>
-                        <div class="article-content">{{ blog["content"] }}</div>
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>博客文章编辑</legend>
+                        </fieldset>
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">博客标题</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="title" required autocomplete="off" placeholder="请输入博客的标题" class="layui-input"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">博客描述</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="description" autocomplete="off" placeholder="请输入博客的简述" class="layui-input"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">博客标签</label>
+                                <div class="layui-input-block">
+                                    <div class="tag-choose">
+                                        <input type="checkbox" id="" name="like[write]" title=""/>
+                                        <input type="checkbox" id="" name="like[read]" title=""/>
+                                        <input type="checkbox" id="" name="like[game]" title=""/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -91,6 +97,12 @@
                                     <a href="/content?ai={{ hot["id"] }}">{{ hot["title"] }}</a>
                                 </li>
                                 {% endfor %}
+                                <li class="site-tree-noicon">
+                                    <a href="/content?ai=1">测试文章1</a>
+                                </li>
+                                <li class="site-tree-noicon">
+                                    <a href="/content?ai=1">测试文章2</a>
+                                </li>
                             </ul>
                         </div>
                     </fieldset>
@@ -106,6 +118,12 @@
                                     <a href="/category?id={{ tag["id"] }}">{{ tag["name"] }}</a>
                                 </li>
                             {%endfor%}
+                                <li class="site-tree-noicon">
+                                    <a href="/category?id=1">个人</a>
+                                </li>
+                                <li class="site-tree-noicon">
+                                    <a href="/category?id=2">测试</a>
+                                </li>
                             </ul>
                         </div>
                     </fieldset>

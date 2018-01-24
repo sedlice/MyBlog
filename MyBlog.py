@@ -12,7 +12,8 @@ image_path = os.path.join(os.getcwd(), "static/images")
 
 @app.route("/")
 def to_index():
-    return redirect("/index")
+    # return redirect("/index")
+    return render_template("writer.html")
 
 
 @app.route('/index')
