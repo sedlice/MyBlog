@@ -49,6 +49,7 @@
 .article-content{
     margin-top: 30px;
     min-height: 650px;
+    width: 100%;
 }
 .article-description{
     font-style: italic;

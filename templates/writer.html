@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/common.css">
     <link rel="stylesheet" type="text/css" href="/static/css/content.css">
     <script type="text/javascript" src="/static/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/CKeditor4/ckeditor.js"></script>
 </head>
 <body class="layui-bg-gray">
     <div class="layui-header">
@@ -45,13 +46,36 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">博客标签</label>
+                                <label class="layui-form-label">标签选择</label>
                                 <div class="layui-input-block">
-                                    <div class="tag-choose">
-                                        <input type="checkbox" id="" name="like[write]" title=""/>
-                                        <input type="checkbox" id="" name="like[read]" title=""/>
-                                        <input type="checkbox" id="" name="like[game]" title=""/>
+                                    <input type="checkbox" id="a1" name="write" title="自述"/>
+                                    <input type="checkbox" id="a2" name="read" title="个人"/>
+                                    <input type="checkbox" id="a3" name="game" title="测试"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">标签新增</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="title" required placeholder="输入新标签并点击+添加" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <button class="layui-btn layui-btn-primary">
+                                        <i class="layui-icon">&#xe654;</i>添加
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">封面上传</label>
+                                <div class="layui-input-block">
+                                    <div class="layui-upload-drag" id="article-img">
+                                        <i class="layui-icon">&#xe681;</i>
+                                        <p>点击上传，或将文件拖拽到此处</p>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="article-content">
+                                    <textarea name="content" cols="80" rows="10" id="editor">在此处输入博客的内容</textarea>
                                 </div>
                             </div>
                         </form>
@@ -137,8 +161,11 @@
     </div>
 </body>
 <script type="text/javascript">
-    layui.use(['element', 'laydate'], function(){
+	CKEDITOR.replace("editor");
+    layui.use(['form', 'element', 'laydate', 'upload', 'jquery'], function(){
         var laydate = layui.laydate;
+        var upload = layui.upload;
+        var $ = layui.jquery;
 
         laydate.render({
             elem: '#blog_calender',
@@ -146,6 +173,16 @@
             lang: 'en',
             showBottom: false,
             theme: "molv"
+        });
+
+        upload.render({
+            elem: '#article-img',
+            url: '/upload',
+            auto: false,
+            bindAction: '#upload-start',
+            done: function(res){
+                console.log(res)
+            }
         });
     })
 </script>

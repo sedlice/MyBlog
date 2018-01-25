@@ -1,7 +1,9 @@
+import re
 from flask import Flask, render_template, url_for, request, redirect, make_response, session
 import os
 import MySQLdb
 import User
+import datetime
 
 
 app = Flask(__name__)
@@ -12,8 +14,8 @@ image_path = os.path.join(os.getcwd(), "static/images")
 
 @app.route("/")
 def to_index():
-    # return redirect("/index")
-    return render_template("writer.html")
+    return redirect("/index")
+    # return render_template("writer.html")
 
 
 @app.route('/index')
@@ -219,17 +221,19 @@ def content():
                            hot_list=hot_list, loginusername=loginusername, userimg=userimg, userinfo=userinfo)
 
 
-@app.route("/upload", methods=["GET", "POST"])
 def upload():
-    "更新方法"
+    "上传方法"
     if request.method == "POST":
-        username = request.form["username"]
-        file = request.files["img"]
-        filename = file.filename
-        file.save(os.path.join(image_path, filename))
-        return "<img src='static/images/%s' alt=''/>" % username
+        file = request.files.get("file")
+        filesuffix = (file.filename.split("."))[-1]
+        filename = str(datetime.datetime.now())
+        reg = re.compile("\\W")
+        filename = reg.sub("", filename)
+        filename = filename + "." + filesuffix
+        file.save(os.path.join("static/images", filename))
+        return filename
     else:
-        return render_template("upload.html")
+        return ""
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -271,6 +275,12 @@ def logout():
     response = make_response(redirect("/index"))
     response.delete_cookie("uid")
     return response
+
+
+@app.route("/writer", methods=["GET", "POST"])
+def writer():
+    "文章编辑方法"
+    return render_template("writer.html")
 
 
 if __name__ == '__main__':
