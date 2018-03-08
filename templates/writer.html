@@ -76,7 +76,12 @@
                             </div>
                             <div class="layui-form-item">
                                 <div class="article-content">
-                                    <textarea name="content" class="layui-textarea" cols="80" rows="10" id="editor"></textarea>
+{#                                    <textarea name="content" class="layui-textarea" cols="80" rows="10" id="editor">#}
+{#                                        <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>#}
+{#                                    </textarea>#}
+                                    <div id="editor">
+                                        <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+                                    </div>
                                 </div>
                                 <div class="layui-input-inline">
                                     <button class="layui-btn" lay-submit="" lay-filter="submit_art">立即提交</button>
@@ -164,11 +169,9 @@
     </div>
 </body>
 <script type="text/javascript">
-    var E = window.wangEditor
-    var editor = new E('#editor')
-        // 或者 var editor = new E( document.getElementById('editor') )
-        editor.create()
-	CKEDITOR.replace("editor");
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.create();
     layui.use(['form', 'element', 'laydate', 'upload', 'jquery'], function(){
         var laydate = layui.laydate;
         var upload = layui.upload;
@@ -190,14 +193,6 @@
             done: function(res){
                 console.log(res)
             }
-        });
-
-        //监听提交
-        form.on('submit(submit_art)', function(data){
-            layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            })
-            return false;
         });
 
         window.onbeforeunload = function(){
