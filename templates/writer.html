@@ -5,7 +5,7 @@
     <title>My Blog(by Python&Flask&Layui)</title>
     <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="/static/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/content.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/writer.css">
     <script type="text/javascript" src="/static/layui/layui.js"></script>
     <script type="text/javascript" src="/static/CKeditor4/ckeditor.js"></script>
 </head>
@@ -32,11 +32,12 @@
                         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                             <legend>博客文章编辑</legend>
                         </fieldset>
-                        <form class="layui-form" action="">
+                        <form class="layui-form" action="/writer" method="post">
+                            <input type="hidden" name="add_article" value="1"/>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">博客标题</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="title" required autocomplete="off" placeholder="请输入博客的标题" class="layui-input"/>
+                                    <input type="text" name="title" required lay-verify="required" autocomplete="off" placeholder="请输入博客的标题" class="layui-input"/>
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -56,7 +57,7 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label">标签新增</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="title" required placeholder="输入新标签并点击+添加" autocomplete="off" class="layui-input">
+                                    <input type="text" name="title" placeholder="输入新标签并点击+添加" autocomplete="off" class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
                                     <button class="layui-btn layui-btn-primary">
@@ -75,7 +76,10 @@
                             </div>
                             <div class="layui-form-item">
                                 <div class="article-content">
-                                    <textarea name="content" cols="80" rows="10" id="editor">在此处输入博客的内容</textarea>
+                                    <textarea name="content" class="layui-textarea" cols="80" rows="10" id="editor"></textarea>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <button class="layui-btn" lay-submit="" lay-filter="submit_art">立即提交</button>
                                 </div>
                             </div>
                         </form>
@@ -94,7 +98,6 @@
                                         {%if islogin == '1' %}
                                             <span class="user-span">{{ loginusername }}</span>
                                         <dl class="layui-nav-child">
-                                            <dd><a href="/writer">写博客</a></dd>
                                             <dd><a href="/logout">退出</a></dd>
                                         </dl>
                                         {%else%}
@@ -184,6 +187,18 @@
                 console.log(res)
             }
         });
+
+        //监听提交
+        form.on('submit(submit_art)', function(data){
+            layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })
+            return false;
+        });
+
+        window.onbeforeunload = function(){
+            return "stop";
+        }
     })
 </script>
 </html>

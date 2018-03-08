@@ -123,8 +123,10 @@ def index():
         userinfo.access = results[0][4]
         userinfo.description = results[0][5]
         loginusername = userinfo.realname
+        session["loginusername"] = loginusername
         imgurl = "images/%s" % userinfo.imgpath
         userimg = url_for("static", filename=imgurl)
+        session["userimg"] = userimg
 
     # 返回数据
     return render_template("index.html", nav_list=nav_list, loginusername=loginusername, userimg=userimg,
@@ -200,8 +202,7 @@ def content():
         userimg = url_for("static", filename="images/unknownuser.png")
         userinfo = None
     else:
-        curr.execute("SELECT id,username,realname,imgpath,access,description FROM user_t WHERE id = %s",
-                     cookies_uid)
+        curr.execute("SELECT id,username,realname,imgpath,access,description FROM user_t WHERE id = %s", cookies_uid)
         conn.commit()
         results = curr.fetchall()
         userinfo = User.User()
@@ -218,7 +219,7 @@ def content():
         userimg = url_for("static", filename=imgurl)
 
     return render_template("content.html", a_tag_list=a_tag_list, tag_list=tag_list, blog=blog, nav_list=nav_list,
-                           hot_list=hot_list, loginusername=loginusername, userimg=userimg, userinfo=userinfo)
+                           hot_list=hot_list, loginusername=loginusername, userimg=userimg, userinfo=userinfo, islogin=islogin)
 
 
 def upload():
@@ -280,7 +281,21 @@ def logout():
 @app.route("/writer", methods=["GET", "POST"])
 def writer():
     "文章编辑方法"
-    return render_template("writer.html")
+    islogin = session["is_login"]
+    if islogin == "1":
+        loginusername = session["loginusername"]
+        userimg = session["userimg"]
+        add_article = request.form.get("add_article")
+        if add_article == "1":
+            art = request.form.get("content")
+            print(art)
+            response = make_response(redirect("/index"))
+            return response
+        else:
+            return render_template("writer.html", loginusername=loginusername, userimg=userimg, islogin=islogin)
+    else:
+        response = make_response(redirect("/index"))
+        return response
 
 
 if __name__ == '__main__':
