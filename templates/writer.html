@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/common.css">
     <link rel="stylesheet" type="text/css" href="/static/css/writer.css">
     <script type="text/javascript" src="/static/layui/layui.js"></script>
-    <script type="text/javascript" src="/static/CKeditor4/ckeditor.js"></script>
+    <script type="text/javascript" src="/static/wangEditor/wangEditor.js"></script>
 </head>
 <body class="layui-bg-gray">
     <div class="layui-header">
@@ -164,6 +164,10 @@
     </div>
 </body>
 <script type="text/javascript">
+    var E = window.wangEditor
+    var editor = new E('#editor')
+        // 或者 var editor = new E( document.getElementById('editor') )
+        editor.create()
 	CKEDITOR.replace("editor");
     layui.use(['form', 'element', 'laydate', 'upload', 'jquery'], function(){
         var laydate = layui.laydate;
