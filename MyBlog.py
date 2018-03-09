@@ -292,6 +292,30 @@ def writer():
             response = make_response(redirect("/index"))
             return response
         else:
+            conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
+            conn.select_db("blog")
+            curr = conn.cursor()
+            # 获取标签项
+            curr.execute("SELECT id,tag FROM tag_t")
+            conn.commit()
+            results = curr.fetchall()
+            tag_list = []
+            for row in results:
+                tag = {}
+                tag["id"] = row[0]
+                tag["name"] = row[1]
+                tag_list.append(tag)
+
+            # 获取热门文章
+            curr.execute("SELECT id,title FROM article_t ORDER BY readings DESC LIMIT 10")
+            conn.commit()
+            results = curr.fetchall()
+            hot_list = []
+            for row in results:
+                hot = {}
+                hot["id"] = row[0]
+                hot["title"] = row[1]
+                hot_list.append(hot)
             return render_template("writer.html", loginusername=loginusername, userimg=userimg, islogin=islogin)
     else:
         response = make_response(redirect("/index"))

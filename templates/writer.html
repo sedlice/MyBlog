@@ -76,11 +76,8 @@
                             </div>
                             <div class="layui-form-item">
                                 <div class="article-content">
-{#                                    <textarea name="content" class="layui-textarea" cols="80" rows="10" id="editor">#}
-{#                                        <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>#}
-{#                                    </textarea>#}
                                     <div id="editor">
-                                        <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+                                        <p><b>请输入博客内容</b></p>
                                     </div>
                                 </div>
                                 <div class="layui-input-inline">
@@ -129,12 +126,6 @@
                                     <a href="/content?ai={{ hot["id"] }}">{{ hot["title"] }}</a>
                                 </li>
                                 {% endfor %}
-                                <li class="site-tree-noicon">
-                                    <a href="/content?ai=1">测试文章1</a>
-                                </li>
-                                <li class="site-tree-noicon">
-                                    <a href="/content?ai=1">测试文章2</a>
-                                </li>
                             </ul>
                         </div>
                     </fieldset>
@@ -150,12 +141,6 @@
                                     <a href="/category?id={{ tag["id"] }}">{{ tag["name"] }}</a>
                                 </li>
                             {%endfor%}
-                                <li class="site-tree-noicon">
-                                    <a href="/category?id=1">个人</a>
-                                </li>
-                                <li class="site-tree-noicon">
-                                    <a href="/category?id=2">测试</a>
-                                </li>
                             </ul>
                         </div>
                     </fieldset>
