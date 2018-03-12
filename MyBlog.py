@@ -281,10 +281,10 @@ def logout():
 @app.route("/writer", methods=["GET", "POST"])
 def writer():
     "文章编辑方法"
-    islogin = session["is_login"]
+    islogin = session.get("is_login")
     if islogin == "1":
-        loginusername = session["loginusername"]
-        userimg = session["userimg"]
+        loginusername = session.get("loginusername")
+        userimg = session.get("userimg")
         add_article = request.form.get("add_article")
         if add_article == "1":
             art = request.form.get("content")
@@ -316,7 +316,8 @@ def writer():
                 hot["id"] = row[0]
                 hot["title"] = row[1]
                 hot_list.append(hot)
-            return render_template("writer.html", loginusername=loginusername, userimg=userimg, islogin=islogin)
+            return render_template("writer.html", loginusername=loginusername, userimg=userimg, islogin=islogin,
+                                   tag_list=tag_list, hot_list=hot_list)
     else:
         response = make_response(redirect("/index"))
         return response

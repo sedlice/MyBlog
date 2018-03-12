@@ -49,7 +49,10 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label">标签选择</label>
                                 <div class="layui-input-block">
-                                    <input type="checkbox" id="a1" name="write" title="自述"/>
+                                    {% for i in tag_list %}
+                                        <input type="checkbox" id="a1" name="write" title="自述"/>
+                                    {% endfor %}
+
                                     <input type="checkbox" id="a2" name="read" title="个人"/>
                                     <input type="checkbox" id="a3" name="game" title="测试"/>
                                 </div>
@@ -74,11 +77,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>写点干货吧</legend>
+                            </fieldset>
                             <div class="layui-form-item">
                                 <div class="article-content">
-                                    <div id="editor">
-                                        <p><b>请输入博客内容</b></p>
-                                    </div>
+                                    <div id="editor"></div>
                                 </div>
                                 <div class="layui-input-inline">
                                     <button class="layui-btn" lay-submit="" lay-filter="submit_art">立即提交</button>
@@ -136,7 +140,7 @@
                         <legend>文章分类</legend>
                         <div class="layui-field-box">
                             <ul class="layui-tree">
-                            {%for tag in blogtag%}
+                            {%for tag in tag_list%}
                                 <li class="site-tree-noicon">
                                     <a href="/category?id={{ tag["id"] }}">{{ tag["name"] }}</a>
                                 </li>
