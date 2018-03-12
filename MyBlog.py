@@ -4,6 +4,7 @@ import os
 import MySQLdb
 import User
 import datetime
+import json
 
 
 app = Flask(__name__)
@@ -222,17 +223,20 @@ def content():
                            hot_list=hot_list, loginusername=loginusername, userimg=userimg, userinfo=userinfo, islogin=islogin)
 
 
+@app.route("/uploadImg", methods=["GET", "POST"])
 def upload():
-    "上传方法"
+    "图片上传方法"
     if request.method == "POST":
-        file = request.files.get("file")
+        file = request.files.get("imgFile")
         filesuffix = (file.filename.split("."))[-1]
         filename = str(datetime.datetime.now())
         reg = re.compile("\\W")
         filename = reg.sub("", filename)
         filename = filename + "." + filesuffix
-        file.save(os.path.join("static/images", filename))
-        return filename
+        filename = os.path.join("static/images", filename)
+        file.save(filename)
+        res = {"errno": 0, "data": [filename]}
+        return json.dumps(res)
     else:
         return ""
 
@@ -287,8 +291,6 @@ def writer():
         userimg = session.get("userimg")
         add_article = request.form.get("add_article")
         if add_article == "1":
-            art = request.form.get("content")
-            print(art)
             response = make_response(redirect("/index"))
             return response
         else:
@@ -321,6 +323,13 @@ def writer():
     else:
         response = make_response(redirect("/index"))
         return response
+
+
+@app.route("/getArticle", methods=["GET", "POST"])
+def getarticle():
+    str = request.args.get("art")
+    print(str)
+    return "1"
 
 
 if __name__ == '__main__':

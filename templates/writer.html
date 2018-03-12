@@ -50,11 +50,8 @@
                                 <label class="layui-form-label">标签选择</label>
                                 <div class="layui-input-block">
                                     {% for i in tag_list %}
-                                        <input type="checkbox" id="a1" name="write" title="自述"/>
+                                        <input type="checkbox" value="{{ i["id"] }}" name="tag_ckb" title="{{ i["name"] }}"/>
                                     {% endfor %}
-
-                                    <input type="checkbox" id="a2" name="read" title="个人"/>
-                                    <input type="checkbox" id="a3" name="game" title="测试"/>
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -160,10 +157,14 @@
 <script type="text/javascript">
     var E = window.wangEditor;
     var editor = new E('#editor');
+    editor.customConfig.uploadImgServer = '/uploadImg';  // 上传图片到服务器
+    editor.customConfig.uploadFileName = 'imgFile';
+    editor.customConfig.uploadImgTimeout = 30000;
     editor.create();
     layui.use(['form', 'element', 'laydate', 'upload', 'jquery'], function(){
         var laydate = layui.laydate;
-        var upload = layui.upload;
+        {#var upload = layui.upload;#}
+        var form = layui.form;
         var $ = layui.jquery;
 
         laydate.render({
@@ -174,7 +175,24 @@
             theme: "molv"
         });
 
-        upload.render({
+        form.on('submit(submit_art)', function(){
+            var flag = false;
+            $.ajax({
+                url:"/getArticle",
+                async:false,
+                data:{
+                    "art": editor.txt.html()
+                },
+                success:function (data) {
+                    if(data == "1"){
+                        flag = true;
+                    }
+                }
+            });
+            return flag;
+        });
+
+{#        upload.render({
             elem: '#article-img',
             url: '/upload',
             auto: false,
@@ -182,7 +200,7 @@
             done: function(res){
                 console.log(res)
             }
-        });
+        });#}
 
         window.onbeforeunload = function(){
             return "stop";
