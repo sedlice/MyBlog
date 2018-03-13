@@ -48,7 +48,7 @@
                                 {{ blog["description"] }}
                             </blockquote>
                         </div>
-                        <div class="article-content">{{ blog["content"] }}</div>
+                        <div class="article-content" id="art-con">{{ blog["content"] }}</div>
                     </div>
                 </div>
             </div>
@@ -119,8 +119,11 @@
     </div>
 </body>
 <script type="text/javascript">
-    layui.use(['element', 'laydate'], function(){
+    layui.use(['element', 'laydate', 'jquery'], function(){
         var laydate = layui.laydate;
+        var $ = layui.jquery;
+
+        $("#art-con").html(unescape($("#art-con").text()));
 
         laydate.render({
             elem: '#blog_calender',

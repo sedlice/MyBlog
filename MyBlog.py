@@ -5,6 +5,7 @@ import MySQLdb
 import User
 import datetime
 import json
+import html
 
 
 app = Flask(__name__)
@@ -52,6 +53,7 @@ def index():
         blog = {}
         blog["id"] = row[0]
         blog["title"] = row[1]
+        # blog["content"] = html.unescape(row[2])
         blog["content"] = row[2]
         if len(row[3]) > 0 and row[3] is not None:
             imgurl = "images/%s" % row[3]
@@ -111,7 +113,7 @@ def index():
         userimg = url_for("static", filename="images/unknownuser.png")
         userinfo = None
     else:
-        curr.execute("SELECT id,username,realname,imgpath,access,description FROM user_t WHERE id = %s", cookies_uid)
+        curr.execute("SELECT id,username,realname,imgpath,access,description FROM user_t WHERE id = %s", (cookies_uid,))
         conn.commit()
         results = curr.fetchall()
         userinfo = User.User()
@@ -144,19 +146,20 @@ def content():
     conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
     conn.select_db("blog")
     curr = conn.cursor()
-    curr.execute("SELECT id,title,content,imgpath,readings,createdate,tags,description FROM article_t WHERE id = %s", article_id)
+    curr.execute("SELECT id,title,content,imgpath,readings,createdate,tags,description FROM article_t WHERE id = %s", (article_id,))
     conn.commit()
     results = curr.fetchall()
     blog = {}
     blog["id"] = results[0][0]
     blog["title"] = results[0][1]
+    # blog["content"] = html.unescape(results[0][2])
     blog["content"] = results[0][2]
     blog["imgpath"] = results[0][3]
     blog["readings"] = results[0][4]
     blog["createdate"] = results[0][5]
     blog["tags"] = results[0][6]
     blog["description"] = results[0][7]
-    curr.execute("SELECT id,tag FROM tag_t WHERE id IN (%s)", blog["tags"])
+    curr.execute("SELECT id,tag FROM tag_t WHERE id IN (%s)", (blog["tags"],))
     conn.commit()
     results = curr.fetchall()
     a_tag_list = []
@@ -203,7 +206,7 @@ def content():
         userimg = url_for("static", filename="images/unknownuser.png")
         userinfo = None
     else:
-        curr.execute("SELECT id,username,realname,imgpath,access,description FROM user_t WHERE id = %s", cookies_uid)
+        curr.execute("SELECT id,username,realname,imgpath,access,description FROM user_t WHERE id = %s", (cookies_uid,))
         conn.commit()
         results = curr.fetchall()
         userinfo = User.User()
@@ -313,10 +316,32 @@ def writer():
         if add_article == "1":
             get_title = request.form.get("title")
             get_description = request.form.get("description")
+            get_newtag = request.form.get("newtag")
+            newtagIds = ""
+            if len(get_newtag) > 0:
+                newtagList = get_newtag.split(",")
+                for t in newtagList:
+                    curr.execute("SELECT COUNT(id),id FROM tag_t WHERE tag=%s", (t,))
+                    conn.commit()
+                    results = curr.fetchall()
+                    nums = results[0][0]
+                    if nums == 0:
+                        curr.execute("INSERT INTO tag_t(tag) VALUES (%s)", (t,))
+                        newtagIds += "," + str(conn.insert_id())
+                        conn.commit()
+                    else:
+                        newtagIds += "," + str(results[0][1])
             get_tag = request.form.getlist("tag_ckb")
-            get_title = request.form.get("title")
+            tagString = ",".join(get_tag)
+            tagString = tagString + newtagIds
+            get_upload = request.form.get("upload")
             get_content = request.form.get("content")
-            curr.execute("INSERT INTO article_t()")
+            get_content = html.escape(get_content)
+            createdate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            curr.execute("INSERT INTO article_t(title, content, imgpath, readings, tags, createdate, description) "
+                         "VALUES (%s, %s, %s, 0, %s, %s, %s)",
+                         (get_title, get_content, get_upload, tagString, createdate, get_description))
+            conn.commit()
             response = make_response(redirect("/index"))
             return response
         else:

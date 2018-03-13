@@ -57,12 +57,7 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label">标签新增</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="title" placeholder="输入新标签并点击+添加" autocomplete="off" class="layui-input">
-                                </div>
-                                <div class="layui-input-inline">
-                                    <button class="layui-btn layui-btn-primary">
-                                        <i class="layui-icon">&#xe654;</i>添加
-                                    </button>
+                                    <input type="text" name="newtag" placeholder="输入新标签并以逗号分隔" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -188,7 +183,10 @@
             elem: '#article-img',
             url: '/upload',
             done: function(res){
-                $("#upload").val(res["data"]);
+                if(res["code"] == "0"){
+                    layer.msg("上传成功！");
+                    $("#upload").val(res["data"]);
+                }
             }
         });
     })
