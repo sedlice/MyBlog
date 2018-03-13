@@ -72,6 +72,7 @@
                                         <i class="layui-icon">&#xe681;</i>
                                         <p>点击上传，或将文件拖拽到此处</p>
                                     </div>
+                                    <input type="hidden" id="upload" name="upload" />
                                 </div>
                             </div>
                             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
@@ -81,6 +82,7 @@
                                 <div class="article-content">
                                     <div id="editor"></div>
                                 </div>
+                                <textarea id="content" style="display: none;" name="content"></textarea>
                                 <div class="layui-input-inline">
                                     <button class="layui-btn" lay-submit="" lay-filter="submit_art">立即提交</button>
                                 </div>
@@ -160,11 +162,14 @@
     editor.customConfig.uploadImgServer = '/uploadImg';  // 上传图片到服务器
     editor.customConfig.uploadFileName = 'imgFile';
     editor.customConfig.uploadImgTimeout = 30000;
+    editor.customConfig.onblur = function (html) {
+        document.getElementById("content").innerHTML = html;
+    };
     editor.create();
     layui.use(['form', 'element', 'laydate', 'upload', 'jquery'], function(){
         var laydate = layui.laydate;
-        {#var upload = layui.upload;#}
         var form = layui.form;
+        var upload = layui.upload;
         var $ = layui.jquery;
 
         laydate.render({
@@ -176,35 +181,16 @@
         });
 
         form.on('submit(submit_art)', function(){
-            var flag = false;
-            $.ajax({
-                url:"/getArticle",
-                async:false,
-                data:{
-                    "art": editor.txt.html()
-                },
-                success:function (data) {
-                    if(data == "1"){
-                        flag = true;
-                    }
-                }
-            });
-            return flag;
+            return true;
         });
 
-{#        upload.render({
+        upload.render({
             elem: '#article-img',
             url: '/upload',
-            auto: false,
-            bindAction: '#upload-start',
             done: function(res){
-                console.log(res)
+                $("#upload").val(res["data"]);
             }
-        });#}
-
-        window.onbeforeunload = function(){
-            return "stop";
-        }
+        });
     })
 </script>
 </html>

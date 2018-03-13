@@ -224,8 +224,8 @@ def content():
 
 
 @app.route("/uploadImg", methods=["GET", "POST"])
-def upload():
-    "图片上传方法"
+def uploadimg():
+    "文章图片上传方法"
     if request.method == "POST":
         file = request.files.get("imgFile")
         filesuffix = (file.filename.split("."))[-1]
@@ -236,6 +236,23 @@ def upload():
         filename = os.path.join("static/images", filename)
         file.save(filename)
         res = {"errno": 0, "data": [filename]}
+        return json.dumps(res)
+    else:
+        return ""
+
+
+@app.route("/upload", methods=["GET", "POST"])
+def upload():
+    "封面图片上传"
+    if request.method == "POST":
+        file = request.files.get("file")
+        filesuffix = (file.filename.split("."))[-1]
+        filename = str(datetime.datetime.now())
+        reg = re.compile("\\W")
+        filename = reg.sub("", filename)
+        filename = filename + "." + filesuffix
+        file.save(os.path.join("static/images", filename))
+        res = {"code": 0, "data": [filename]}
         return json.dumps(res)
     else:
         return ""
@@ -287,16 +304,22 @@ def writer():
     "文章编辑方法"
     islogin = session.get("is_login")
     if islogin == "1":
+        conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
+        conn.select_db("blog")
+        curr = conn.cursor()
         loginusername = session.get("loginusername")
         userimg = session.get("userimg")
         add_article = request.form.get("add_article")
         if add_article == "1":
+            get_title = request.form.get("title")
+            get_description = request.form.get("description")
+            get_tag = request.form.getlist("tag_ckb")
+            get_title = request.form.get("title")
+            get_content = request.form.get("content")
+            curr.execute("INSERT INTO article_t()")
             response = make_response(redirect("/index"))
             return response
         else:
-            conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
-            conn.select_db("blog")
-            curr = conn.cursor()
             # 获取标签项
             curr.execute("SELECT id,tag FROM tag_t")
             conn.commit()
@@ -323,13 +346,6 @@ def writer():
     else:
         response = make_response(redirect("/index"))
         return response
-
-
-@app.route("/getArticle", methods=["GET", "POST"])
-def getarticle():
-    str = request.args.get("art")
-    print(str)
-    return "1"
 
 
 if __name__ == '__main__':
