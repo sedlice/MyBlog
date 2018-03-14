@@ -55,8 +55,8 @@
                                         <img src="{{foo["imgpath"]}}" alt=""/>
                                     {% endif %}
                                 </div>
-                                <div class="article-content layui-text">
-                                    <p class="layui-unselect">{{foo['content']}}</p>
+                                <div class="article-content layui-text" id="art-content-div">
+                                    <p class="layui-unselect">{{foo['content']|safe}}</p>
                                 </div>
                             </div>
                         </li>
@@ -135,11 +135,16 @@
     </div>
 </body>
 <script type="text/javascript">
-    layui.use(['form', 'element', 'carousel', 'laydate', 'laypage'], function(){
+    layui.use(['form', 'element', 'carousel', 'laydate', 'laypage', 'jquery'], function(){
         var element = layui.element;
         var carousel = layui.carousel;
         var laydate = layui.laydate;
         var laypage = layui.laypage;
+        var $ = layui.jquery;
+
+        $("#art-content-div").find("img").each(function(){
+            $(this).attr("src", "");
+        });
 
         carousel.render({
             elem:"#carousel",

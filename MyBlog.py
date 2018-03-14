@@ -5,7 +5,6 @@ import MySQLdb
 import User
 import datetime
 import json
-import html
 
 
 app = Flask(__name__)
@@ -17,7 +16,6 @@ image_path = os.path.join(os.getcwd(), "static/images")
 @app.route("/")
 def to_index():
     return redirect("/index")
-    # return render_template("writer.html")
 
 
 @app.route('/index')
@@ -53,7 +51,6 @@ def index():
         blog = {}
         blog["id"] = row[0]
         blog["title"] = row[1]
-        # blog["content"] = html.unescape(row[2])
         blog["content"] = row[2]
         if len(row[3]) > 0 and row[3] is not None:
             imgurl = "images/%s" % row[3]
@@ -146,27 +143,30 @@ def content():
     conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
     conn.select_db("blog")
     curr = conn.cursor()
+    curr.execute("UPDATE article_t SET readings=(readings+1) WHERE id=%s", (article_id,))
+    conn.commit()
     curr.execute("SELECT id,title,content,imgpath,readings,createdate,tags,description FROM article_t WHERE id = %s", (article_id,))
     conn.commit()
     results = curr.fetchall()
     blog = {}
     blog["id"] = results[0][0]
     blog["title"] = results[0][1]
-    # blog["content"] = html.unescape(results[0][2])
+    blog["content"] = results[0][2]
     blog["content"] = results[0][2]
     blog["imgpath"] = results[0][3]
     blog["readings"] = results[0][4]
     blog["createdate"] = results[0][5]
     blog["tags"] = results[0][6]
+    tag_arr = (blog["tags"]).split(",")
     blog["description"] = results[0][7]
-    curr.execute("SELECT id,tag FROM tag_t WHERE id IN (%s)", (blog["tags"],))
-    conn.commit()
-    results = curr.fetchall()
     a_tag_list = []
-    for row in results:
+    for row in tag_arr:
+        curr.execute("SELECT id,tag FROM tag_t WHERE id=%s", (int(row),))
+        conn.commit()
+        results = curr.fetchall()
         a_tag = {}
-        a_tag["id"] = row[0]
-        a_tag["tag"] = row[1]
+        a_tag["id"] = results[0][0]
+        a_tag["tag"] = results[0][1]
         a_tag_list.append(a_tag)
 
 
@@ -336,7 +336,6 @@ def writer():
             tagString = tagString + newtagIds
             get_upload = request.form.get("upload")
             get_content = request.form.get("content")
-            get_content = html.escape(get_content)
             createdate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             curr.execute("INSERT INTO article_t(title, content, imgpath, readings, tags, createdate, description) "
                          "VALUES (%s, %s, %s, 0, %s, %s, %s)",

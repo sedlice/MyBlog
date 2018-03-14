@@ -68,6 +68,9 @@
     -webkit-box-orient:vertical;
     -webkit-line-clamp:7;
 }
+.article-content p{
+    overflow: hidden;
+}
 .article-title{
     margin-top: 30px;
     overflow: hidden;
