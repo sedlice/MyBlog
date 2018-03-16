@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+__author__ = "pyx"
+
 
 class User(object):
     def __init__(self):

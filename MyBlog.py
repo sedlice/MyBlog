@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
 import re
 from flask import Flask, render_template, url_for, request, redirect, make_response, session
 import os
@@ -5,6 +8,9 @@ import MySQLdb
 import User
 import datetime
 import json
+import util
+
+__author__ = "pyx"
 
 
 app = Flask(__name__)
@@ -370,6 +376,38 @@ def writer():
     else:
         response = make_response(redirect("/index"))
         return response
+
+
+@app.route("/admin_pyx", methods=["GET", "POST"])
+def admin_login():
+    "管理员专用后台管理登录"
+    if request.form.get("login") == "1":
+        r = request.form.get("username")
+        c = request.form.get("pwd")
+        if len(r) > 0 and len(c) > 0:
+            c = util.genearteMD5(c)
+            conn = MySQLdb.connect(user="root", password="root", host="localhost", charset="utf8")
+            conn.select_db("blog")
+            curr = conn.cursor()
+            curr.execute("SELECT * FROM ruler")
+            conn.commit()
+            result = curr.fetchall()
+            if result[0][1] == r and result[0][2] == c:
+                session["admin_login"] = "ruler_p"
+                response = make_response(redirect("/resource_display"))
+                return response
+    else:
+        return render_template("adminLogin.html", errorInfo="请登录")
+
+
+@app.route("/resource_display", methods=["GET", "POST"])
+def resource_display():
+    "资源后台展示"
+    login_user = session.get("admin_login")
+    if login is not None and len(login_user) > 0:
+        return render_template("resourceDisplay.html")
+    else:
+        return render_template("adminLogin.html", errorInfo="请登录")
 
 
 if __name__ == '__main__':
