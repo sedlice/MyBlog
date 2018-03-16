@@ -403,11 +403,12 @@ def admin_login():
 @app.route("/resource_display", methods=["GET", "POST"])
 def resource_display():
     "资源后台展示"
-    login_user = session.get("admin_login")
-    if login is not None and len(login_user) > 0:
-        return render_template("resourceDisplay.html")
-    else:
-        return render_template("adminLogin.html", errorInfo="请登录")
+    return render_template("resourceDisplay.html")
+    # login_user = session.get("admin_login")
+    # if login is not None and len(login_user) > 0:
+    #     return render_template("resourceDisplay.html")
+    # else:
+    #     return render_template("adminLogin.html", errorInfo="请登录")
 
 
 if __name__ == '__main__':
