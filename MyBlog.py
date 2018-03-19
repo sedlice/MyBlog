@@ -423,6 +423,12 @@ def resource_display_table():
     #     return render_template("adminLogin.html", errorInfo="请登录")
 
 
+@app.route("/resource_display_local", methods=["GET", "POST"])
+def resource_display_local():
+    "显示服务器资源信息"
+    return render_template("/resourceDisplayLocal.html")
+
+
 @app.route("/test_data", methods=["GET", "POST"])
 def test_data():
     "资源后台列表展示"
@@ -433,16 +439,28 @@ def test_data():
                  {"id": 10002, "aid": 1234, "time": "2018-03-19 17:41:35"},
                  {"id": 10003, "aid": 1234, "time": "2018-03-19 17:41:35"},
                  {"id": 10004, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10005, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10000, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10001, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10002, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10003, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10004, "aid": 1234, "time": "2018-03-19 17:41:35"},
                  {"id": 10005, "aid": 1234, "time": "2018-03-19 17:41:35"}]
         map1 = {"code": 0, "msg": "", "count": 100, "data": list1}
         return json.dumps(map1)
     else:
-        list1 = [{"id":10000,"username":"user-0","sex":"女","city":"城市-0"},
-                 {"id":10001,"username":"user-1","sex":"男","city":"城市-1"},
-                 {"id":10002,"username":"user-2","sex":"女","city":"城市-2"},
-                 {"id":10003,"username":"user-3","sex":"女","city":"城市-3"},
-                 {"id":10004,"username":"user-4","sex":"男","city":"城市-4"},
-                 {"id":10005,"username":"user-5","sex":"女","city":"城市-5"}]
+        list1 = [{"id": 10000, "username": "user-0", "sex": "女", "city": "城市-0"},
+                 {"id": 10001, "username": "user-1", "sex": "男", "city": "城市-1"},
+                 {"id": 10002, "username": "user-2", "sex": "女", "city": "城市-2"},
+                 {"id": 10003, "username": "user-3", "sex": "女", "city": "城市-3"},
+                 {"id": 10004, "username": "user-4", "sex": "男", "city": "城市-4"},
+                 {"id": 10005, "username": "user-5", "sex": "女", "city": "城市-5"},
+                 {"id": 10000, "username": "user-0", "sex": "女", "city": "城市-0"},
+                 {"id": 10001, "username": "user-1", "sex": "男", "city": "城市-1"},
+                 {"id": 10002, "username": "user-2", "sex": "女", "city": "城市-2"},
+                 {"id": 10003, "username": "user-3", "sex": "女", "city": "城市-3"},
+                 {"id": 10004, "username": "user-4", "sex": "男", "city": "城市-4"},
+                 {"id": 10005, "username": "user-5", "sex": "女", "city": "城市-5"}]
         map1 = {"code":0,"msg":"","count":100,"data":list1}
         return json.dumps(map1)
 

@@ -3,7 +3,7 @@
 }
 .logo{
     color: #00a0df !important;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 300;
     font-family: "Microsoft YaHei UI";
     margin-top: 15px;
@@ -29,7 +29,6 @@
     margin: 10px 40px;
     width: 405px;
     height: 150px;
-    background-color: #cca300;
 }
 .board-icon{
     float: left;
@@ -55,8 +54,23 @@
     margin: 30px 0px 10px 30px;
     clear: both;
 }
-
 .table-div{
     margin-left: 40px;
     margin-right: 40px;
+}
+.local-title{
+    color: #ffffff;
+    font-size: 26px;
+    float: left;
+    margin-left: 40px;
+    line-height: 150px;
+}
+.local-info{
+    float: right;
+    margin-right: 30px;
+    line-height: 150px;
+}
+.local-canvas{
+    height: 150px;
+    width: 150px;
 }
