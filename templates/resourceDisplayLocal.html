@@ -30,19 +30,19 @@
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="javascript:;" href="javascript:;">浏览跟踪信息<span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child">
-                        <dd class="layui-this">
-                            <a href="#">跟踪信息统计</a>
+                        <dd>
+                            <a href="/resource_display">跟踪信息统计</a>
                         </dd>
                         <dd>
-                            <a href="#">跟踪信息列表展示</a>
+                            <a href="/resource_display_table">跟踪信息列表展示</a>
                         </dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="javascript:;" href="javascript:;">博客服务器信息<span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child">
-                        <dd class="">
-                            <a href="#">信息内容</a>
+                        <dd class="layui-this">
+                            <a href="/resource_display_local">信息内容</a>
                         </dd>
                     </dl>
                 </li>
@@ -50,35 +50,19 @@
         </div>
     </div>
     <div class="main-window">
-        <blockquote class="layui-elem-quote">浏览数统计</blockquote>
+        <blockquote class="layui-elem-quote">服务器信息</blockquote>
         <div>
-            <div class="board">
-                <div class="board-icon"><i class="layui-icon" style="font-size: 60px;color: #ffffff">&#xe629;</i></div>
-                <div class="board-text">
-                    <div class="board-text-number">3254</div>
-                    <div class="board-text-string">系统类型</div>
-                </div>
+            <div class="board" style="background-color: #57889c">
+                <div class="local-title">系统</div>
+                <div class="local-info"><img src="/static/images/logo/centOS.png"/></div>
             </div>
-            <div class="board" style="width: 405px;height: 150px;background-color: #40affe">
-                <div class="board-icon"><i class="layui-icon" style="font-size: 60px;color: #ffffff">&#xe705;</i></div>
-                <div class="board-text">
-                    <div class="board-text-number">31</div>
-                    <div class="board-text-string">内存</div>
-                </div>
+            <div class="board" style="background-color: #40affe">
+                <div class="local-title">内存</div>
+                <div class="local-info local-canvas" id="ram"></div>
             </div>
-            <div class="board" style="width: 405px;height: 150px;background-color: #40affe">
-                <div class="board-icon"><i class="layui-icon" style="font-size: 60px;color: #ffffff">&#xe705;</i></div>
-                <div class="board-text">
-                    <div class="board-text-number">31</div>
-                    <div class="board-text-string">硬盘</div>
-                </div>
-            </div>
-            <div class="board" style="width: 405px;height: 150px;background-color: #40affe">
-                <div class="board-icon"><i class="layui-icon" style="font-size: 60px;color: #ffffff">&#xe705;</i></div>
-                <div class="board-text">
-                    <div class="board-text-number">31</div>
-                    <div class="board-text-string">今日浏览量</div>
-                </div>
+            <div class="board" style="background-color: #26c281">
+                <div class="local-title">硬盘</div>
+                <div class="local-info local-canvas" id="hdd"></div>
             </div>
         </div>
     </div>
@@ -94,47 +78,71 @@
         var element = layui.element;
         var $ = layui.jquery;
 
-        var myChart = echarts.init(document.getElementById('lllbh'));
+        var myChart = echarts.init(document.getElementById('ram'));
         var option = {
-            color: ['#3398DB'],
-            xAxis: {
-                type: 'category',
-                data: ['1-1', '1-2', '1-3', '1-4', '1-5', '1-6', '1-7', '1-8', '1-9', '1-10', '1-11', '1-12', '1-13', '1-14', '1-15', '1-16', '1-17', '1-18', '1-19', '1-20', '1-21', '1-22', '1-23', '1-24', '1-25', '1-26', '1-27', '1-28', '1-29', '1-30']
+            tooltip : {
+                trigger: 'item',
+                formatter: "{b} : {c} ({d}%)"
             },
-            yAxis: {
-                type: 'value'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            series: [{
-                data: [4, 8, 3, 0, 1, 7, 8, 8, 3, 0, 1, 7, 8, 8, 3, 0, 1, 7, 8, 8, 3, 0, 1, 7, 8, 8, 3, 0, 1, 7],
-                type: 'line'
-            }]
+            series : [
+                {
+                    type: 'pie',
+                    radius : '65%',
+                    center: ['50%', '50%'],
+                    selectedMode: 'single',
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'inner'
+                        }
+                    },
+                    data:[
+                        {value:1548, name: '已使用'},
+                        {value:535, name: '未使用'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
         };
         myChart.setOption(option);
 
-        myChart = echarts.init(document.getElementById('llsf'));
+        myChart = echarts.init(document.getElementById('hdd'));
         option = {
-            color: ['#3398DB'],
-            xAxis: {
-                type: 'category',
-                data: ['北京', '上海', '广东', '浙江', '福建', '江西', '江苏', '山东', '湖南', '辽宁']
-            },
-            yAxis: {
-                type: 'value'
-            },
             tooltip : {
-                trigger: 'axis',
-                axisPointer : {
-                    type : 'shadow'
-                }
+                trigger: 'item',
+                formatter: "{b} : {c} ({d}%)"
             },
-            series: [{
-                data: [29, 27, 23, 22, 22, 17, 13, 10, 8, 6],
-                type: 'bar',
-                barWidth: '50%'
-            }]
+            series : [
+                {
+                    type: 'pie',
+                    radius : '65%',
+                    center: ['50%', '50%'],
+                    selectedMode: 'single',
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'inner'
+                        }
+                    },
+                    data:[
+                        {value:6, name: '已使用'},
+                        {value:4, name: '未使用'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
         };
         myChart.setOption(option);
     })

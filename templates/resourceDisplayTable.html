@@ -6,7 +6,6 @@
     <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css"/>
     <link rel="stylesheet" type="text/css" href="/static/css/display.css"/>
     <script type="text/javascript" src="/static/layui/layui.js"></script>
-    <script type="text/javascript" src="/static/js/echarts.js"></script>
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
@@ -30,19 +29,19 @@
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="javascript:;" href="javascript:;">浏览跟踪信息<span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child">
-                        <dd class="layui-this">
-                            <a href="#">跟踪信息统计</a>
-                        </dd>
                         <dd>
-                            <a href="#">跟踪信息列表展示</a>
+                            <a href="/resource_display">跟踪信息统计</a>
+                        </dd>
+                        <dd class="layui-this">
+                            <a href="/resource_display_table">跟踪信息列表展示</a>
                         </dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="javascript:;" href="javascript:;">博客服务器信息<span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child">
-                        <dd class="">
-                            <a href="#">信息内容</a>
+                        <dd>
+                            <a href="/resource_display_local">信息内容</a>
                         </dd>
                     </dl>
                 </li>
@@ -55,7 +54,7 @@
             <legend>博客访问用户记录</legend>
         </fieldset>
         <div class="table-div">
-            <table class="layui-table" lay-data="{height: 400, url:'/test_data', page:true, id:'user-info'}" lay-filter="getDetail">
+            <table class="layui-table" lay-data="{url:'/test_data', page:true, id:'user-info'}" lay-filter="getDetail">
                 <thead>
                     <tr>
                         <th lay-data="{field:'id'}">ID</th>
@@ -69,7 +68,7 @@
             </table>
         </div>
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;margin-left: 30px;">
-            <legend>用户文章访问记录</legend>
+            <legend>用户访问文章的记录</legend>
         </fieldset>
         <div class="table-div">
             <table class="layui-hide" id="user-read-info"></table>
@@ -97,19 +96,13 @@
                     elem: '#user-read-info',
                     url:'/test_data?uid='+uid,
                     cellMinWidth: 80,
-                    cols: [
-                        [
-                            {field:'id', title: 'ID'},
+                    cols: [[{field:'id', title: 'ID'},
                             {field:'aid', title: '文章', sort:true},
-                            {field:'time', title: '时间', sort: true}
-                        ]
-                    ]
-                    ,page: true
+                            {field:'time', title: '时间', sort: true}]],
+                    page: true
                 });
             }
         });
-
-
     })
 </script>
 </html>
