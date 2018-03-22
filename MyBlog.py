@@ -9,6 +9,7 @@ import User
 import datetime
 import json
 import util
+from urllib import request as req
 import psutil
 
 __author__ = "pyx"
@@ -34,6 +35,13 @@ def index():
     conn = pymysql.connect(user="root", password="root", host="localhost", charset="utf8")
     conn.select_db("blog")
     curr = conn.cursor()
+
+    # 储存访问记录
+    ip = request.remote_addr
+    reqInfo = req.Request(url="http://ip.taobao.com/service/getIpInfo.php?ip=%s" % ip)
+    ipInfo = req.urlopen(reqInfo)
+    print(ipInfo.read())
+    # curr.execute("INSERT INTO guest_t(IPAddress,province,city,visitTime) VALUES ()")
 
     # 获取导航栏项
     curr.execute("SELECT id,navname FROM nav_t")
