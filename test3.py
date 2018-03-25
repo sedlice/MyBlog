@@ -114,6 +114,16 @@ def get_python_version_tuple():
     return platform.python_version_tuple()
 
 
+def getMemory():
+    with open('/proc/meminfo') as fd:
+        for line in fd:
+            if line.startswith('MemTotal'):
+                mem = int(line.split()[1].strip())
+                break
+    mem = '%.f' % (mem / 1024.0) + ' MB'
+    return {'Memory': mem}
+
+
 def show_os_all_info():
     '''打印os的全部信息'''
     print('获取操作系统名称及版本号 : [{}]'.format(get_platform()))
@@ -123,6 +133,7 @@ def show_os_all_info():
     print('计算机的网络名称 : [{}]'.format(get_node()))
     print('计算机处理器信息 : [{}]'.format(get_processor()))
     print('获取操作系统类型 : [{}]'.format(get_system()))
+    print('')
     print('汇总信息 : [{}]'.format(get_uname()))
 
 

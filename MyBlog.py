@@ -17,6 +17,7 @@ __author__ = "pyx"
 
 app = Flask(__name__)
 app.secret_key = "abcde"
+sqlHelper = {"user": "root", "pwd": "root", "host": "localhost", "charset": "utf8"}
 
 image_path = os.path.join(os.getcwd(), "static/images")
 
@@ -32,7 +33,8 @@ def index():
     # 基础连接信息
     islogin = session.get("is_login")
     cookies_uid = request.cookies.get("uid")
-    conn = pymysql.connect(user="root", password="root", host="localhost", charset="utf8")
+    conn = pymysql.connect(user=sqlHelper.get("user"), password=sqlHelper.get("pwd"), host=sqlHelper.get("host"),
+                           charset=sqlHelper.get("charset"))
     conn.select_db("blog")
     curr = conn.cursor()
 
@@ -155,7 +157,8 @@ def content():
     islogin = session.get("is_login")
     cookies_uid = request.cookies.get("uid")
     article_id = request.args.get("ai")
-    conn = pymysql.connect(user="root", password="root", host="localhost", charset="utf8")
+    conn = pymysql.connect(user=sqlHelper.get("user"), password=sqlHelper.get("pwd"), host=sqlHelper.get("host"),
+                           charset=sqlHelper.get("charset"))
     conn.select_db("blog")
     curr = conn.cursor()
     curr.execute("UPDATE article_t SET readings=(readings+1) WHERE id=%s", (article_id,))
@@ -283,7 +286,8 @@ def login():
         username = request.form.get("username")
         if len(username) >= 0:
             pwd = request.form.get("pwd")
-            conn = pymysql.connect(user="root", password="root", host="localhost", charset="utf8")
+            conn = pymysql.connect(user=sqlHelper.get("user"), password=sqlHelper.get("pwd"),
+                                   host=sqlHelper.get("host"), charset=sqlHelper.get("charset"))
             conn.select_db("blog")
             curr = conn.cursor()
             curr.execute("SELECT id FROM user_t WHERE username=%s AND password=%s", (username, pwd))
@@ -322,7 +326,8 @@ def writer():
     "文章编辑方法"
     islogin = session.get("is_login")
     if islogin == "1":
-        conn = pymysql.connect(user="root", password="root", host="localhost", charset="utf8")
+        conn = pymysql.connect(user=sqlHelper.get("user"), password=sqlHelper.get("pwd"), host=sqlHelper.get("host"),
+                               charset=sqlHelper.get("charset"))
         conn.select_db("blog")
         curr = conn.cursor()
         loginusername = session.get("loginusername")
@@ -395,7 +400,8 @@ def admin_login():
         c = request.form.get("pwd")
         if len(r) > 0 and len(c) > 0:
             c = util.genearteMD5(c)
-            conn = pymysql.connect(user="root", password="root", host="localhost", charset="utf8")
+            conn = pymysql.connect(user=sqlHelper.get("user"), password=sqlHelper.get("pwd"),
+                                   host=sqlHelper.get("host"), charset=sqlHelper.get("charset"))
             conn.select_db("blog")
             curr = conn.cursor()
             curr.execute("SELECT * FROM ruler")
