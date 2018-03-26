@@ -11,6 +11,7 @@ import json
 import util
 from urllib import request as req
 import psutil
+import platform
 
 __author__ = "pyx"
 
@@ -440,6 +441,15 @@ def resource_display_table():
 @app.route("/resource_display_local", methods=["GET", "POST"])
 def resource_display_local():
     "显示服务器资源信息"
+    os = platform.system()
+    sysimg = ""
+    if os == "Windows":
+        pass
+    else:
+        if os == "Linux":
+            pass
+    pc_mem = psutil.virtual_memory()
+
     return render_template("/resourceDisplayLocal.html")
 
 

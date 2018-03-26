@@ -2,12 +2,14 @@
 # -*- coding:utf-8 -*-
 
 import platform
+import psutil
 
 os = platform.system()
+pc_mem = psutil.virtual_memory()
 print(os)
+print(platform.release())
 print(platform.platform())
 print(platform.version())
-print(platform.architecture())
 
 
 '''
@@ -114,14 +116,19 @@ def get_python_version_tuple():
     return platform.python_version_tuple()
 
 
-def getMemory():
-    with open('/proc/meminfo') as fd:
-        for line in fd:
-            if line.startswith('MemTotal'):
-                mem = int(line.split()[1].strip())
-                break
-    mem = '%.f' % (mem / 1024.0) + ' MB'
-    return {'Memory': mem}
+def get_memory():
+    "获取总的内存大小"
+    return pc_mem.total
+
+
+def get_used_memory():
+    "获取使用内存的大小"
+    return pc_mem.used
+
+
+def get_other_memory():
+    "获取剩余内存的大小"
+    return pc_mem.total-pc_mem.used
 
 
 def show_os_all_info():
@@ -133,7 +140,9 @@ def show_os_all_info():
     print('计算机的网络名称 : [{}]'.format(get_node()))
     print('计算机处理器信息 : [{}]'.format(get_processor()))
     print('获取操作系统类型 : [{}]'.format(get_system()))
-    print('')
+    print('内存总大小 : [%f GB]' % (get_memory()/(1024**3)))
+    print('已用内存大小 : [{}]'.format(get_used_memory()))
+    print('可用内存大小 : [{}]'.format(get_other_memory()))
     print('汇总信息 : [{}]'.format(get_uname()))
 
 
