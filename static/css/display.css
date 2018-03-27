@@ -62,12 +62,12 @@
     color: #ffffff;
     font-size: 26px;
     float: left;
-    margin-left: 40px;
+    margin-left: 25px;
     line-height: 150px;
 }
 .local-info{
     float: right;
-    margin-right: 30px;
+    margin-right: 20px;
     line-height: 150px;
 }
 .local-canvas{

@@ -41,10 +41,28 @@ def index():
 
     # 储存访问记录
     ip = request.remote_addr
-    reqInfo = req.Request(url="http://ip.taobao.com/service/getIpInfo.php?ip=%s" % ip)
-    ipInfo = req.urlopen(reqInfo)
-    print(ipInfo.read())
-    # curr.execute("INSERT INTO guest_t(IPAddress,province,city,visitTime) VALUES ()")
+    now_ip = session.get("now_ip")
+    if ip != now_ip:
+        reqInfo = req.Request(url="http://ip.taobao.com/service/getIpInfo.php?ip=123.118.28.89")
+        ipInfoJson = (req.urlopen(reqInfo)).read()
+        ipInfo = json.loads(ipInfoJson)
+        if ipInfo["code"] == 0:
+            ipInfoDict = ipInfo["data"]
+            ip_add = ipInfoDict["ip"]
+            ip_p = ipInfoDict["region"]
+            ip_c = ipInfoDict["city"]
+            vt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            curr.execute("INSERT INTO guest_t(IPAddress,province,city,visitTime) VALUES (%s,%s,%s,%s)",
+                         (ip_add, ip_p, ip_c, vt))
+            session["now_ip"] = ip
+            session["now_ip_id"] = conn.insert_id()
+            conn.commit()
+        else:
+            vt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            curr.execute("INSERT INTO guest_t(IPAddress,province,city,visitTime) VALUES ('0.0.0.0','未知',‘未知’,%s)",
+                         (vt,))
+            session["now_ip_id"] = conn.insert_id()
+            conn.commit()
 
     # 获取导航栏项
     curr.execute("SELECT id,navname FROM nav_t")
@@ -162,6 +180,14 @@ def content():
                            charset=sqlHelper.get("charset"))
     conn.select_db("blog")
     curr = conn.cursor()
+
+    # 储存浏览记录
+    now_ip_id = session.get("now_ip_id")
+    vt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if now_ip_id is None:
+        now_ip_id = 0
+    curr.execute("INSERT INTO guest_article_t(gId,aId,visitTime) VALUES (%s,%s,%s)", (now_ip_id, article_id, vt))
+
     curr.execute("UPDATE article_t SET readings=(readings+1) WHERE id=%s", (article_id,))
     conn.commit()
     curr.execute("SELECT id,title,content,imgpath,readings,createdate,tags,description FROM article_t WHERE id = %s", (article_id,))
@@ -441,16 +467,40 @@ def resource_display_table():
 @app.route("/resource_display_local", methods=["GET", "POST"])
 def resource_display_local():
     "显示服务器资源信息"
-    os = platform.system()
+    sys_os = platform.system()
     sysimg = ""
-    if os == "Windows":
-        pass
-    else:
-        if os == "Linux":
-            pass
+    if sys_os == "Windows":
+        sysimg = url_for("static", filename="images/logo/windows.png")
+    if sys_os == "Darwin":
+        sysimg = url_for("static", filename="images/logo/apple.png")
+    if sys_os == "Linux":
+        sysimg = url_for("static", filename="images/logo/linux.png")
+        sysNameStr = (platform.platform()).lower()
+        if "centos" in sysNameStr:
+            sysimg = url_for("static", filename="images/logo/centOS.png")
+        if "debian" in sysNameStr:
+            sysimg = url_for("static", filename="images/logo/debian.png")
+        if "deepin" in sysNameStr:
+            sysimg = url_for("static", filename="images/logo/deepin.png")
+        if "fedora" in sysNameStr:
+            sysimg = url_for("static", filename="images/logo/fedora.png")
+        if "redhat" in sysNameStr:
+            sysimg = url_for("static", filename="images/logo/redhat.png")
+        if "suse" in sysNameStr:
+            sysimg = url_for("static", filename="images/logo/suse.png")
+        if "ubuntu" in sysNameStr:
+            sysimg = url_for("static", filename="images/logo/ubuntu.png")
     pc_mem = psutil.virtual_memory()
+    total_mem = "%.2f" % (pc_mem.total / (1024**3))
+    used_mem = "%.2f" % (pc_mem.used / (1024**3))
+    free_mem = "%.2f" % ((pc_mem.total-pc_mem.used) / (1024**3))
+    pc_disk = psutil.disk_usage("/")
+    total_disk = "%.2f" % (pc_disk.total / (1024**3))
+    used_disk = "%.2f" % (pc_disk.used / (1024**3))
+    free_disk = "%.2f" % (pc_disk.free / (1024**3))
 
-    return render_template("/resourceDisplayLocal.html")
+    return render_template("/resourceDisplayLocal.html", sysimg=sysimg, total_mem=total_mem, used_mem=used_mem,
+                           free_mem=free_mem, total_disk=total_disk, used_disk=used_disk, free_disk=free_disk)
 
 
 @app.route("/test_data", methods=["GET", "POST"])

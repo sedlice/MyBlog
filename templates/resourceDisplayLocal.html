@@ -18,7 +18,7 @@
             <div class="layui-form component">
                 <ul class="layui-nav">
                     <li class="layui-nav-item ">
-                        <a href="#">文档</a>
+
                     </li>
                 </ul>
             </div>
@@ -52,23 +52,23 @@
     <div class="main-window">
         <blockquote class="layui-elem-quote">服务器信息</blockquote>
         <div>
-            <div class="board" style="background-color: #57889c">
+            <div class="board" style="background-color: #a1a1a1">
                 <div class="local-title">系统</div>
-                <div class="local-info"><img src="/static/images/logo/centOS.png"/></div>
+                <div class="local-info"><img src="{{ sysimg }}"/></div>
             </div>
             <div class="board" style="background-color: #40affe">
-                <div class="local-title">内存</div>
+                <div class="local-title">内存(<span>{{total_mem}}GB</span>)</div>
                 <div class="local-info local-canvas" id="ram"></div>
             </div>
             <div class="board" style="background-color: #26c281">
-                <div class="local-title">硬盘</div>
+                <div class="local-title">硬盘(<span>{{total_disk}}GB</span>)</div>
                 <div class="local-info local-canvas" id="hdd"></div>
             </div>
         </div>
     </div>
-    <div class="layui-footer footer footer-demo">
+    <div class="layui-footer footer">
         <div class="layui-main">
-            <p>© 2018 <a href="/">layui.com</a> MIT license</p>
+            <p>Develop by Pyx.With Python,Flask,Layui and Echarts</p>
         </div>
     </div>
 </div>
@@ -96,10 +96,10 @@
                             position: 'inner'
                         }
                     },
-                    color:["#FF3030","#DEDEDE"],
+                    color:["#FF3030","#90EE90"],
                     data:[
-                        {value:1548, name: '已使用'},
-                        {value:535, name: '未使用'}
+                        {value:{{used_mem}}, name: '已使用'},
+                        {value:{{free_mem}}, name: '未使用'}
                     ],
                     itemStyle: {
                         emphasis: {
@@ -131,10 +131,10 @@
                             position: 'inner'
                         }
                     },
-                    color:["#FF3030","#DEDEDE"],
+                    color:["#FF3030","#90EE90"],
                     data:[
-                        {value:6, name: '已使用'},
-                        {value:4, name: '未使用'}
+                        {value:{{used_disk}}, name: '已使用'},
+                        {value:{{free_disk}}, name: '未使用'}
                     ],
                     itemStyle: {
                         emphasis: {

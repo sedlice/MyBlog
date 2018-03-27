@@ -6,7 +6,6 @@ import psutil
 
 os = platform.system()
 pc_mem = psutil.virtual_memory()
-print(os)
 print(platform.release())
 print(platform.platform())
 print(platform.version())

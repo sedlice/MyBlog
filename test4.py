@@ -13,3 +13,5 @@ print("used memory: %f GB" % float(pc_mem.used / div_gb_factor))
 print("percent of used memory: %f" % float(pc_mem.percent))
 print("free memory: %f GB" % float(pc_mem.free / div_gb_factor))
 print(pc_mem)
+
+print(psutil.disk_usage("/"))
