@@ -188,6 +188,7 @@ def content():
         now_ip_id = 0
     curr.execute("INSERT INTO guest_article_t(gId,aId,visitTime) VALUES (%s,%s,%s)", (now_ip_id, article_id, vt))
 
+    # 各获取文章的标签
     curr.execute("UPDATE article_t SET readings=(readings+1) WHERE id=%s", (article_id,))
     conn.commit()
     curr.execute("SELECT id,title,content,imgpath,readings,createdate,tags,description FROM article_t WHERE id = %s", (article_id,))
@@ -445,6 +446,31 @@ def admin_login():
 @app.route("/resource_display", methods=["GET", "POST"])
 def resource_display():
     "资源后台展示"
+    conn = pymysql.connect(user=sqlHelper.get("user"), password=sqlHelper.get("pwd"),
+                           host=sqlHelper.get("host"), charset=sqlHelper.get("charset"))
+    conn.select_db("blog")
+    curr = conn.cursor()
+
+    # 获取总浏览量
+    curr.execute("SELECT COUNT(id) FROM guest_t")
+    conn.commit()
+    result = curr.fetchall()
+    visiter_sum = result[0][0]
+
+    # 获取当日目前的浏览量
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE '%s%'", (today,))
+    conn.commit()
+    result = curr.fetchall()
+    visiter_today = result[0][0]
+
+    # 获取近30天每天的浏览量
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE '%s%'", (today,))
+    conn.commit()
+    result = curr.fetchall()
+    visiter_today = result[0][0]
+
     return render_template("resourceDisplay.html")
     # login_user = session.get("admin_login")
     # if login is not None and len(login_user) > 0:
