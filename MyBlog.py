@@ -59,7 +59,7 @@ def index():
             conn.commit()
         else:
             vt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            curr.execute("INSERT INTO guest_t(IPAddress,province,city,visitTime) VALUES ('0.0.0.0','未知',‘未知’,%s)",
+            curr.execute("INSERT INTO guest_t(IPAddress,province,city,visitTime) VALUES ('0.0.0.0','未知','未知',%s)",
                          (vt,))
             session["now_ip_id"] = conn.insert_id()
             conn.commit()
