@@ -423,6 +423,7 @@ def writer():
 @app.route("/admin_pyx", methods=["GET", "POST"])
 def admin_login():
     "管理员专用后台管理登录"
+    # "Sedlice@Peng#1110"
     if request.form.get("login") == "1":
         r = request.form.get("username")
         c = request.form.get("pwd")
@@ -458,15 +459,15 @@ def resource_display():
     visiter_sum = result[0][0]
 
     # 获取当日目前的浏览量
-    today = datetime.datetime.now().strftime("%Y-%m-%d")
-    curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE '%s%'", (today,))
+    today = datetime.datetime.now().strftime("%Y-%m-%d")+"%"
+    curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE %s", (today,))
     conn.commit()
     result = curr.fetchall()
     visiter_today = result[0][0]
 
     # 获取近30天每天的浏览量
-    today = datetime.datetime.now().strftime("%Y-%m-%d")
-    curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE '%s%'", (today,))
+    today = datetime.datetime.now().strftime("%Y-%m-%d")+"%"
+    curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE %s", (today,))
     conn.commit()
     result = curr.fetchall()
     visiter_today = result[0][0]
@@ -524,7 +525,17 @@ def resource_display_local():
     total_disk = "%.2f" % (pc_disk.total / (1024**3))
     used_disk = "%.2f" % (pc_disk.used / (1024**3))
     free_disk = "%.2f" % (pc_disk.free / (1024**3))
-
+    if sys_os == "Windows":
+        prom = [0, 0, 0]
+        pc = psutil.disk_partitions()
+        for i in pc:
+            pc_disk = psutil.disk_usage(i[0])
+            prom[0] = prom[0] + pc_disk[0]
+            prom[1] = prom[1] + pc_disk[1]
+            prom[2] = prom[2] + pc_disk[2]
+        total_disk = "%.2f" % (prom[0] / (1024 ** 3))
+        used_disk = "%.2f" % (prom[1] / (1024 ** 3))
+        free_disk = "%.2f" % (prom[2] / (1024 ** 3))
     return render_template("/resourceDisplayLocal.html", sysimg=sysimg, total_mem=total_mem, used_mem=used_mem,
                            free_mem=free_mem, total_disk=total_disk, used_disk=used_disk, free_disk=free_disk)
 
@@ -540,28 +551,28 @@ def test_data():
                  {"id": 10003, "aid": 1234, "time": "2018-03-19 17:41:35"},
                  {"id": 10004, "aid": 1234, "time": "2018-03-19 17:41:35"},
                  {"id": 10005, "aid": 1234, "time": "2018-03-19 17:41:35"},
-                 {"id": 10000, "aid": 1234, "time": "2018-03-19 17:41:35"},
-                 {"id": 10001, "aid": 1234, "time": "2018-03-19 17:41:35"},
-                 {"id": 10002, "aid": 1234, "time": "2018-03-19 17:41:35"},
-                 {"id": 10003, "aid": 1234, "time": "2018-03-19 17:41:35"},
-                 {"id": 10004, "aid": 1234, "time": "2018-03-19 17:41:35"},
-                 {"id": 10005, "aid": 1234, "time": "2018-03-19 17:41:35"}]
-        map1 = {"code": 0, "msg": "", "count": 100, "data": list1}
+                 {"id": 10006, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10007, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10008, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10009, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10010, "aid": 1234, "time": "2018-03-19 17:41:35"},
+                 {"id": 10011, "aid": 1234, "time": "2018-03-19 17:41:35"}]
+        map1 = {"code": 0, "msg": "", "count": 12, "data": list1}
         return json.dumps(map1)
     else:
-        list1 = [{"id": 10000, "username": "user-0", "sex": "女", "city": "城市-0"},
-                 {"id": 10001, "username": "user-1", "sex": "男", "city": "城市-1"},
-                 {"id": 10002, "username": "user-2", "sex": "女", "city": "城市-2"},
-                 {"id": 10003, "username": "user-3", "sex": "女", "city": "城市-3"},
-                 {"id": 10004, "username": "user-4", "sex": "男", "city": "城市-4"},
-                 {"id": 10005, "username": "user-5", "sex": "女", "city": "城市-5"},
-                 {"id": 10000, "username": "user-0", "sex": "女", "city": "城市-0"},
-                 {"id": 10001, "username": "user-1", "sex": "男", "city": "城市-1"},
-                 {"id": 10002, "username": "user-2", "sex": "女", "city": "城市-2"},
-                 {"id": 10003, "username": "user-3", "sex": "女", "city": "城市-3"},
-                 {"id": 10004, "username": "user-4", "sex": "男", "city": "城市-4"},
-                 {"id": 10005, "username": "user-5", "sex": "女", "city": "城市-5"}]
-        map1 = {"code":0,"msg":"","count":100,"data":list1}
+        list1 = [{"id": 10000, "ipadd": "1.203.80.98", "pro": "江西", "city": "南昌", "time": "2018-03-30"},
+                 {"id": 10001, "ipadd": "1.203.80.98", "pro": "北京", "city": "北京", "time": "2018-03-30"},
+                 {"id": 10002, "ipadd": "1.203.80.98", "pro": "北京", "city": "北京", "time": "2018-03-30"},
+                 {"id": 10003, "ipadd": "1.203.80.98", "pro": "上海", "city": "上海", "time": "2018-03-30"},
+                 {"id": 10004, "ipadd": "1.203.80.98", "pro": "江苏", "city": "南京", "time": "2018-03-30"},
+                 {"id": 10005, "ipadd": "1.203.80.98", "pro": "浙江", "city": "杭州", "time": "2018-03-30"},
+                 {"id": 10006, "ipadd": "1.203.80.98", "pro": "上海", "city": "上海", "time": "2018-03-30"},
+                 {"id": 10007, "ipadd": "1.203.80.98", "pro": "北京", "city": "北京", "time": "2018-03-30"},
+                 {"id": 10008, "ipadd": "1.203.80.98", "pro": "福建", "city": "厦门", "time": "2018-03-30"},
+                 {"id": 10009, "ipadd": "1.203.80.98", "pro": "安徽", "city": "合肥", "time": "2018-03-30"},
+                 {"id": 10010, "ipadd": "1.203.80.98", "pro": "江苏", "city": "苏州", "time": "2018-03-30"},
+                 {"id": 10011, "ipadd": "1.203.80.98", "pro": "上海", "city": "上海", "time": "2018-03-30"}]
+        map1 = {"code": 0, "msg": "", "count": 12, "data": list1}
         return json.dumps(map1)
 
 

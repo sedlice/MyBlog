@@ -5,7 +5,6 @@ import datetime
 import hashlib
 
 __author__ = "pyx"
-# 根据ip查询城市接口 http://ip.taobao.com/service/getIpInfo.php?ip=110.84.0.129
 
 
 def genearteMD5(pwd):
