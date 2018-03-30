@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
 import re
@@ -420,10 +420,9 @@ def writer():
         return response
 
 
-@app.route("/admin_pyx", methods=["GET", "POST"])
+@app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     "管理员专用后台管理登录"
-    # "Sedlice@Peng#1110"
     if request.form.get("login") == "1":
         r = request.form.get("username")
         c = request.form.get("pwd")
@@ -438,8 +437,7 @@ def admin_login():
             result = curr.fetchall()
             if result[0][1] == r and result[0][2] == c:
                 session["admin_login"] = "ruler_p"
-                response = make_response(redirect("/resource_display"))
-                return response
+                return redirect("/resource_display")
     else:
         return render_template("adminLogin.html", errorInfo="请登录")
 
@@ -447,97 +445,99 @@ def admin_login():
 @app.route("/resource_display", methods=["GET", "POST"])
 def resource_display():
     "资源后台展示"
-    conn = pymysql.connect(user=sqlHelper.get("user"), password=sqlHelper.get("pwd"),
-                           host=sqlHelper.get("host"), charset=sqlHelper.get("charset"))
-    conn.select_db("blog")
-    curr = conn.cursor()
+    login_user = session.get("admin_login")
+    if login_user is not None and len(login_user) > 0:
+        conn = pymysql.connect(user=sqlHelper.get("user"), password=sqlHelper.get("pwd"),
+                               host=sqlHelper.get("host"), charset=sqlHelper.get("charset"))
+        conn.select_db("blog")
+        curr = conn.cursor()
 
-    # 获取总浏览量
-    curr.execute("SELECT COUNT(id) FROM guest_t")
-    conn.commit()
-    result = curr.fetchall()
-    visiter_sum = result[0][0]
+        # 获取总浏览量
+        curr.execute("SELECT COUNT(id) FROM guest_t")
+        conn.commit()
+        result = curr.fetchall()
+        visiter_sum = result[0][0]
 
-    # 获取当日目前的浏览量
-    today = datetime.datetime.now().strftime("%Y-%m-%d")+"%"
-    curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE %s", (today,))
-    conn.commit()
-    result = curr.fetchall()
-    visiter_today = result[0][0]
+        # 获取当日目前的浏览量
+        today = datetime.datetime.now().strftime("%Y-%m-%d")+"%"
+        curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE %s", (today,))
+        conn.commit()
+        result = curr.fetchall()
+        visiter_today = result[0][0]
 
-    # 获取近30天每天的浏览量
-    today = datetime.datetime.now().strftime("%Y-%m-%d")+"%"
-    curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE %s", (today,))
-    conn.commit()
-    result = curr.fetchall()
-    visiter_today = result[0][0]
+        # 获取近30天每天的浏览量
+        today = datetime.datetime.now().strftime("%Y-%m-%d")+"%"
+        curr.execute("SELECT COUNT(id) FROM guest_t WHERE visitTime LIKE %s", (today,))
+        conn.commit()
+        result = curr.fetchall()
+        visiter_today = result[0][0]
 
-    return render_template("resourceDisplay.html")
-    # login_user = session.get("admin_login")
-    # if login is not None and len(login_user) > 0:
-    #     return render_template("resourceDisplay.html")
-    # else:
-    #     return render_template("adminLogin.html", errorInfo="请登录")
+        return render_template("resourceDisplay.html")
+    else:
+        return render_template("adminLogin.html", errorInfo="请登录")
 
 
 @app.route("/resource_display_table", methods=["GET", "POST"])
 def resource_display_table():
     "资源后台列表展示"
-    return render_template("resourceDisplayTable.html")
-    # login_user = session.get("admin_login")
-    # if login is not None and len(login_user) > 0:
-    #     return render_template("resourceDisplay.html")
-    # else:
-    #     return render_template("adminLogin.html", errorInfo="请登录")
+    login_user = session.get("admin_login")
+    if login_user is not None and len(login_user) > 0:
+        return render_template("resourceDisplayTable.html")
+    else:
+        return render_template("adminLogin.html", errorInfo="请登录")
 
 
 @app.route("/resource_display_local", methods=["GET", "POST"])
 def resource_display_local():
     "显示服务器资源信息"
-    sys_os = platform.system()
-    sysimg = ""
-    if sys_os == "Windows":
-        sysimg = url_for("static", filename="images/logo/windows.png")
-    if sys_os == "Darwin":
-        sysimg = url_for("static", filename="images/logo/apple.png")
-    if sys_os == "Linux":
-        sysimg = url_for("static", filename="images/logo/linux.png")
-        sysNameStr = (platform.platform()).lower()
-        if "centos" in sysNameStr:
-            sysimg = url_for("static", filename="images/logo/centOS.png")
-        if "debian" in sysNameStr:
-            sysimg = url_for("static", filename="images/logo/debian.png")
-        if "deepin" in sysNameStr:
-            sysimg = url_for("static", filename="images/logo/deepin.png")
-        if "fedora" in sysNameStr:
-            sysimg = url_for("static", filename="images/logo/fedora.png")
-        if "redhat" in sysNameStr:
-            sysimg = url_for("static", filename="images/logo/redhat.png")
-        if "suse" in sysNameStr:
-            sysimg = url_for("static", filename="images/logo/suse.png")
-        if "ubuntu" in sysNameStr:
-            sysimg = url_for("static", filename="images/logo/ubuntu.png")
-    pc_mem = psutil.virtual_memory()
-    total_mem = "%.2f" % (pc_mem.total / (1024**3))
-    used_mem = "%.2f" % (pc_mem.used / (1024**3))
-    free_mem = "%.2f" % ((pc_mem.total-pc_mem.used) / (1024**3))
-    pc_disk = psutil.disk_usage("/")
-    total_disk = "%.2f" % (pc_disk.total / (1024**3))
-    used_disk = "%.2f" % (pc_disk.used / (1024**3))
-    free_disk = "%.2f" % (pc_disk.free / (1024**3))
-    if sys_os == "Windows":
-        prom = [0, 0, 0]
-        pc = psutil.disk_partitions()
-        for i in pc:
-            pc_disk = psutil.disk_usage(i[0])
-            prom[0] = prom[0] + pc_disk[0]
-            prom[1] = prom[1] + pc_disk[1]
-            prom[2] = prom[2] + pc_disk[2]
-        total_disk = "%.2f" % (prom[0] / (1024 ** 3))
-        used_disk = "%.2f" % (prom[1] / (1024 ** 3))
-        free_disk = "%.2f" % (prom[2] / (1024 ** 3))
-    return render_template("/resourceDisplayLocal.html", sysimg=sysimg, total_mem=total_mem, used_mem=used_mem,
-                           free_mem=free_mem, total_disk=total_disk, used_disk=used_disk, free_disk=free_disk)
+    login_user = session.get("admin_login")
+    if login_user is not None and len(login_user) > 0:
+        sys_os = platform.system()
+        sysimg = ""
+        if sys_os == "Windows":
+            sysimg = url_for("static", filename="images/logo/windows.png")
+        if sys_os == "Darwin":
+            sysimg = url_for("static", filename="images/logo/apple.png")
+        if sys_os == "Linux":
+            sysimg = url_for("static", filename="images/logo/linux.png")
+            sysNameStr = (platform.platform()).lower()
+            if "centos" in sysNameStr:
+                sysimg = url_for("static", filename="images/logo/centOS.png")
+            if "debian" in sysNameStr:
+                sysimg = url_for("static", filename="images/logo/debian.png")
+            if "deepin" in sysNameStr:
+                sysimg = url_for("static", filename="images/logo/deepin.png")
+            if "fedora" in sysNameStr:
+                sysimg = url_for("static", filename="images/logo/fedora.png")
+            if "redhat" in sysNameStr:
+                sysimg = url_for("static", filename="images/logo/redhat.png")
+            if "suse" in sysNameStr:
+                sysimg = url_for("static", filename="images/logo/suse.png")
+            if "ubuntu" in sysNameStr:
+                sysimg = url_for("static", filename="images/logo/ubuntu.png")
+        pc_mem = psutil.virtual_memory()
+        total_mem = "%.2f" % (pc_mem.total / (1024**3))
+        used_mem = "%.2f" % (pc_mem.used / (1024**3))
+        free_mem = "%.2f" % ((pc_mem.total-pc_mem.used) / (1024**3))
+        pc_disk = psutil.disk_usage("/")
+        total_disk = "%.2f" % (pc_disk.total / (1024**3))
+        used_disk = "%.2f" % (pc_disk.used / (1024**3))
+        free_disk = "%.2f" % (pc_disk.free / (1024**3))
+        if sys_os == "Windows":
+            prom = [0, 0, 0]
+            pc = psutil.disk_partitions()
+            for i in pc:
+                pc_disk = psutil.disk_usage(i[0])
+                prom[0] = prom[0] + pc_disk[0]
+                prom[1] = prom[1] + pc_disk[1]
+                prom[2] = prom[2] + pc_disk[2]
+            total_disk = "%.2f" % (prom[0] / (1024 ** 3))
+            used_disk = "%.2f" % (prom[1] / (1024 ** 3))
+            free_disk = "%.2f" % (prom[2] / (1024 ** 3))
+        return render_template("/resourceDisplayLocal.html", sysimg=sysimg, total_mem=total_mem, used_mem=used_mem,
+                               free_mem=free_mem, total_disk=total_disk, used_disk=used_disk, free_disk=free_disk)
+    else:
+        return render_template("adminLogin.html", errorInfo="请登录")
 
 
 @app.route("/test_data", methods=["GET", "POST"])
@@ -577,4 +577,4 @@ def test_data():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host="127.0.0.1", port=8086)
+    app.run(debug=True, host="0.0.0.0", port=8080)
