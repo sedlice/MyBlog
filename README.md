@@ -33,7 +33,7 @@
 </pre>
 <ul>
 <li>博客首页
-<img src="mahua-logo.jpg" alt="mahua"></li>
+<img src="" alt="mahua"></li>
 <li>文章页面
 <img src="mahua-logo.jpg" alt="mahua"></li>
 <li>新增编辑页面

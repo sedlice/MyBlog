@@ -322,14 +322,17 @@ def login():
             conn.commit()
             results = curr.fetchall()
             flag = False
-            response = make_response(redirect("/index"))
-            uid = results[0][0]
-            if uid > 0:
-                response.set_cookie("uid", value=str(uid))
-                session["is_login"] = "1"
-                flag = True
+            if len(results) > 0:
+                response = make_response(redirect("/index"))
+                uid = results[0][0]
+                if uid > 0:
+                    response.set_cookie("uid", value=str(uid))
+                    session["is_login"] = "1"
+                    flag = True
+                else:
+                    session["is_login"] = "0"
             else:
-                session["is_login"] = "0"
+                flag = False
             curr.close()
             conn.close()
             if flag:
