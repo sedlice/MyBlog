@@ -101,7 +101,7 @@
                         <legend>文章分类</legend>
                         <div class="layui-field-box">
                             <ul class="layui-tree">
-                            {%for tag in blogtag%}
+                            {%for tag in tag_list%}
                                 <li class="site-tree-noicon">
                                     <a href="/category?id={{ tag["id"] }}">{{ tag["name"] }}</a>
                                 </li>

@@ -33,15 +33,16 @@
 </pre>
 <ul>
 <li>博客首页
-<img src="" alt="mahua"></li>
+<img src="/static/images/mdImage/shouye.jpg" alt=""></li>
 <li>文章页面
-<img src="mahua-logo.jpg" alt="mahua"></li>
+<img src="/static/images/mdImage/wenzhang.jpg" alt=""></li>
 <li>新增编辑页面
-<img src="mahua-logo.jpg" alt="mahua"></li>
+<img src="/static/images/mdImage/bianji.jpg" alt=""></li>
 <li>访问者数量、所在城市统计监控（*目前后台监控中的跟踪记录数据是假数据）
-<img src="mahua-logo.jpg" alt="mahua"></li>
+<img src="/static/images/mdImage/ziyuanjilu.jpg" alt=""></li>
 <li>访问博客文章记录
-<img src="mahua-logo.jpg" alt="mahua"></li>
+<img src="/static/images/mdImage/liulangenzong.jpg" alt=""></li>
 <li>服务器系统、内存、硬盘的监控</li>
+<img src="/static/images/mdImage/xitong.jpg" alt=""></li>
 </ul>
 </body></html>
