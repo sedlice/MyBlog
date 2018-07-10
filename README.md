@@ -1,13 +1,8 @@
 # MyBlog（我的个人博客项目）
 <html lang="en"><head>
     <meta charset="UTF-8">
-<body marginheight="0"><p>该项目是我用来学习Python的练习项目，但是已尽可能接近实际项目。目前项目还处于调整优化阶段，并未完全完成。</p>
-<p>项目现已部署在本人的阿里云Linux服务器上<br>
-首页访问地址为：<a href="http://39.107.89.163:8080">http://39.107.89.163:8080</a> <br>
-资源监控后台的访问地址为：<a href="http://39.107.89.163:8080/admin_login">http://39.107.89.163:8080/admin_login</a>
-后台登录的用户名和密码都是pyx
+<body marginheight="0"><p>该项目是我用来学习Python的练习项目，但是已尽可能接近实际项目。</p>
 
-</p>
 <p><code>此项目从前端、后台到项目部署全都是本人独立完成。</code>
 
 </p>
